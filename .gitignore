@@ -1,3 +1,7 @@
+results/*
+data/*
+*.asv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
