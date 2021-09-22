@@ -3,6 +3,7 @@ data/*
 *.asv
 *.dat
 TUnCaT archive/unmixed_traces/*
+TUnCaT archive/demo_*ABO.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

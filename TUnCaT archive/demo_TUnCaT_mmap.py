@@ -17,6 +17,13 @@ if __name__ == '__main__':
     # which can be differnt for different neurons. It must be sorted in ascending order.
     # When running "run_TUnCaT_multi_alpha", each element will be tested and saved independently.
 
+    # The folder name (excluding the file name) containing the video
+    dir_video_SNR = dir_video
+    # The folder name (excluding the file name) containing the neuron masks
+    dir_masks = dir_video
+    # The folder to save the unmixed traces.
+    dir_traces = os.path.join(dir_video, 'unmixed_traces')
+
     # Traces lower than this quantile are clipped to this quantile value.
     Qclip = 0  # 0.08 # 
     # Maximum pertentage of unmixed traces equaling to the trace minimum.
@@ -29,13 +36,6 @@ if __name__ == '__main__':
     nbin = 1 # int(sys.argv[3]) # 
     # The method of temporal downsampling. can be 'downsample', 'sum', or 'mean'
     bin_option = 'downsample' 
-
-    # The folder name (excluding the file name) containing the video
-    dir_video_SNR = dir_video
-    # The folder name (excluding the file name) containing the neuron masks
-    dir_masks = dir_video
-    # The folder to save the unmixed traces.
-    dir_traces = os.path.join(dir_video, 'unmixed_traces')
 
     for (ind_Exp, Exp_ID) in enumerate(list_Exp_ID):
         print(Exp_ID)

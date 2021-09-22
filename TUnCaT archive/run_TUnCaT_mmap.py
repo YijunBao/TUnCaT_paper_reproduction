@@ -9,8 +9,8 @@ from utils import find_dataset
 # if (sys.version_info.major+sys.version_info.minor/10)>=3.8
 # try:
 # from multiprocessing.shared_memory import SharedMemory
-# from traces_from_masks_mp_mmap_fn_neighbors import traces_bgtraces_from_masks_neighbors
-from traces_from_masks_mp_mmap_neighbors import traces_bgtraces_from_masks_neighbors
+from traces_from_masks_mp_mmap_fn_neighbors import traces_bgtraces_from_masks_neighbors
+# from traces_from_masks_mp_mmap_neighbors import traces_bgtraces_from_masks_neighbors
 from use_nmfunmix_mp_diag_v1_shm_MSE_novideo import use_nmfunmix
 # except:
 #     raise ImportError('No SharedMemory module. Please use Python version >=3.8, or use memory mapping instead of SharedMemory')
@@ -112,10 +112,10 @@ def run_TUnCaT(Exp_ID, filename_video, filename_masks, dir_traces, list_alpha=[0
     # Calculate traces, background, and outside traces
     start = time.time()
     # if fp_masks.sum()*T >= 7e7: # Using multiprocessing is faster for large videos
-    # (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_neighbors(fn_video, video_dtype, \
-    #     video_shape, fn_masks, masks_shape, fp_masks, name_mmap)
-    (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_neighbors(fp_video, video_dtype, \
-        video_shape, fp_masks, masks_shape, name_mmap)
+    (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_neighbors(fn_video, video_dtype, \
+        video_shape, fn_masks, masks_shape, fp_masks, name_mmap)
+    # (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_neighbors(fp_video, video_dtype, \
+    #     video_shape, fp_masks, masks_shape, name_mmap)
     # else: # Using numba is faster for small videos
     #     (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_numba_neighbors(
     #         video, FinalMasks)
@@ -145,11 +145,13 @@ def run_TUnCaT(Exp_ID, filename_video, filename_masks, dir_traces, list_alpha=[0
     savemat(os.path.join(dir_trace_unmix, Exp_ID+".mat"), {"traces_nmfdemix": traces_nmfdemix,\
         "list_mixout":list_mixout, "list_MSE":list_MSE, "list_final_alpha":list_final_alpha, "list_n_iter":list_n_iter})
 
-    # # Unlink shared memory objects
-    # shm_video.close()
-    # shm_video.unlink()
-    # shm_masks.close()
-    # shm_masks.unlink()
+    # Delete memory mapping files
+    fp_masks._mmap.close()
+    del fp_masks
+    os.remove(fn_masks)
+    fp_video._mmap.close()
+    del fp_video
+    os.remove(fn_video)
 
     return traces_nmfdemix, list_mixout
 

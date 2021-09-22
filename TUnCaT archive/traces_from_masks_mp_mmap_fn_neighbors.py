@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import multiprocessing as mp
 
@@ -33,7 +34,7 @@ def mean_median_out_trace(nn, fn_video, video_dtype, video_shape, \
     return trace, bgtrace, outtrace
 
 
-def traces_bgtraces_from_masks_neighbors(fn_video, video_dtype, video_shape, \
+def traces_bgtraces_from_masks_mmap_neighbors(fn_video, video_dtype, video_shape, \
         fn_masks, masks_shape, fpasks, name_mmap):
     (ncells, Lx, Ly) = masks_shape
     (list_neighbors, comx, comy, area, r_bg) = find_neighbors(fpasks)
@@ -56,6 +57,13 @@ def traces_bgtraces_from_masks_neighbors(fn_video, video_dtype, video_shape, \
     traces = np.vstack([x[0] for x in results]).T
     bgtraces = np.vstack([x[1] for x in results]).T
     outtraces = np.array([x[2] for x in results]).T
+
+    fp_xx._mmap.close()
+    del fp_xx
+    os.remove(fn_xx)
+    fp_yy._mmap.close()
+    del fp_yy
+    os.remove(fn_yy)
 
     return traces, bgtraces, outtraces, list_neighbors
 

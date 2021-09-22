@@ -58,7 +58,7 @@ def mean_median_out_trace(nn, shm_video, video_dtype, video_shape, \
     return trace, bgtrace, outtrace
 
 
-def traces_bgtraces_from_masks_neighbors(shm_video, video_dtype, video_shape, \
+def traces_bgtraces_from_masks_shm_neighbors(shm_video, video_dtype, video_shape, \
         shm_masks, masks_shape, FinalMasks):
     ''' Calculate the traces of the neuron, background, and outside region for all neurons. 
     Inputs: 
@@ -110,6 +110,12 @@ def traces_bgtraces_from_masks_neighbors(shm_video, video_dtype, video_shape, \
     traces = np.vstack([x[0] for x in results]).T
     bgtraces = np.vstack([x[1] for x in results]).T
     outtraces = np.array([x[2] for x in results]).T
+
+    # Unlink shared memory objects
+    shm_xx.close()
+    shm_xx.unlink()
+    shm_yy.close()
+    shm_yy.unlink()
 
     return traces, bgtraces, outtraces, list_neighbors
 
