@@ -1,6 +1,8 @@
 results/*
 data/*
 *.asv
+*.dat
+TUnCaT archive/unmixed_traces/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
