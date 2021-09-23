@@ -26,7 +26,6 @@ def mean_median_out_trace(nn, shm_video, video_dtype, video_shape, \
         outtrace (numpy.ndarray of float, shape = (T,)): The raw trace of all the outside activities around the neuron.
     '''
 
-    # shm_video = SharedMemory(name = video_name)
     (T, Lx, Ly) = video_shape
     n = comx.size
     # Reconstruct the video, masks, and corrdinates from shared memory objects.

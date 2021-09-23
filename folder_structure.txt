@@ -19,7 +19,7 @@
 |       |       Traces_etc_{name}.mat           # GT traces of the NAOMi video
 |       \---videos                              # NAOMi videos
 |               {name}.h5
-
+|
 +---evaluation                                                          # Code to evaluate the accuracy of different unmixing methods
 |       eval_{data}_{method}.m                                          # Evaluate the unmixing accuracy of {method} on {data}
 |       eval_{data}_ours_bin.m                                          # Evaluate the unmixing accuracy of TUnCaT on {data} using temporal downsampling
@@ -29,7 +29,7 @@
 |       SNR_normalization.m                                             # Function to normalize a trace to an SNR trace
 |       summary_timing_ABO_all.m                                        # Summarize the F1 scores and processing time of all unmixing methods processing ABO videos
 |       summary_timing_bin.m                                            # Summarize the F1 scores and processing time of TUnCaT processing ABO videos with temporal downsampling
-
+|
 +---plot figures                                                        # Code to plot figures in the paper
 |       compare_others_1p.m                                             # Compare the unmixed traces of one-photon videos. Followed by "plot_traces_frames_1p.m"
 |       compare_others_ABO_5.m                                          # Compare the unmixed traces of ABO videos. Followed by "plot_traces_frames_ABO.m"
@@ -49,7 +49,7 @@
 |       show_example_frame_bgsubs.m                                     # Plot the example peak frames of an ABO video in Fig 2A and Fig 1A
 |       show_example_frame_NAOMi.m                                      # Plot the example peak frames of a NAOMi video in Fig 3A
 |       show_summary_images.m                                           # Plot S2 Fig
-
+|
 +---results                                                             # Unmixed traces and F1 scores of all datasets
 |   +---1p                                                              # Unmixed traces and F1 scores of one-photon dataset
 |   |   |   Table_time_SNR.mat                                          # Processing time for converting raw videos to SNR videos 
@@ -72,11 +72,11 @@
 |   |       |   \---raw                                                 # Background-subtracted traces before NMF
 |   |       |           {name}.mat
 |   |       \---traces_ours_SNR_merge_novideounmix_r2_mixout
-|   |       |   |   Table_time.mat                                      # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
-|   |       |   +---alpha= {alpha}                                      # Unmixed traces using this alpha
-|   |       |   |       {name}.mat
-|   |       |   \---raw                                                 # Background-subtracted traces before NMF
-|   |       |           {name}.mat
+|   |           |   Table_time.mat                                      # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
+|   |           +---alpha= {alpha}                                      # Unmixed traces using this alpha
+|   |           |       {name}.mat
+|   |           \---raw                                                 # Background-subtracted traces before NMF
+|   |                   {name}.mat
 |   +---ABO                                                                             # Unmixed traces and F1 scores of ABO dataset
 |   |   |   Table_time_SNR.mat                                                          # Processing time for converting raw videos to SNR videos 
 |   |   +---evaluation                                                                  # The F1 scores of different unmixing methods
@@ -103,16 +103,16 @@
 |   |       +---traces_ours_SNR_novideounmix_r2_fixed_alpha
 |   |       +---traces_ours_SNR_novideounmix_r2_mixout1000
 |   |       \---traces_ours_SNR_novideounmix_r2_mixout
-|   |       |   |   Table_time.mat                                      # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
-|   |       |   +---alpha= {alpha}                                      # Unmixed traces using this alpha
-|   |       |   |       {name}.mat
-|   |       |   \---raw                                                 # Background-subtracted traces before NMF
-|   |       |           {name}.mat
+|   |           |   Table_time.mat                                      # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
+|   |           +---alpha= {alpha}                                      # Unmixed traces using this alpha
+|   |           |       {name}.mat
+|   |           \---raw                                                 # Background-subtracted traces before NMF
+|   |                   {name}.mat
 |   \---NAOMi                                                           # Unmixed traces and F1 scores of NAOMi dataset
-|   |   |   Table_time_SNR.mat                                          # Processing time for converting raw videos to SNR videos 
+|       |   Table_time_SNR.mat                                          # Processing time for converting raw videos to SNR videos 
 |       +---evaluation                                                  # The F1 scores of different unmixing methods
 |       |       scores_split_{method}_{parameters}_{video_format}_{...}.mat                                                                     # F1 scores of unmixing {method} on {video_format} with simulation {parameters}
-|   |   |       scores_split_{method}_{parameters}_{video_format}_{...}_{downsample{n}}_{...}.mat                                               # F1 scores of unmixing {method} on {video_format} with simulation {parameters} using a downsampling ratio {n}
+|       |       scores_split_{method}_{parameters}_{video_format}_{...}_{downsample{n}}_{...}.mat                                               # F1 scores of unmixing {method} on {video_format} with simulation {parameters} using a downsampling ratio {n}
 |       |       timing_120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f_all_methods_split _novideounmix_r2_mixout_ksd-psd x5.mat              # Summary of F1 scores and processing time of all unmixing methods 
 |       |       timing_split_BinUnmix_novideounmix_r2_100.mat                                                                                   # Summary of F1 scores and processing time of TUnCaT with temporal downsampling
 |       |       timing_x5_fs_GCaMP6f_all_methods_split _novideounmix_r2_mixout_ksd-psd.mat                                                      # Summary of F1 scores and processing time of all unmixing methods when processing NAOMi videos with different frame rate
@@ -129,48 +129,61 @@
 |           +---traces_FISSA_Raw
 |           +---traces_FISSA_SNR
 |           +---traces_ours_Raw_novideounmix_r2_mixout
-|   |       |   |   Table_time.mat                              # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
-|   |       |   +---alpha= {alpha}                              # Unmixed traces using this alpha
-|   |       |   |       {name}.mat
-|   |       |   \---raw                                         # Background-subtracted traces before NMF
-|   |       |           {name}.mat
+|           |   |   Table_time.mat                              # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
+|           |   +---alpha= {alpha}                              # Unmixed traces using this alpha
+|           |   |       {name}.mat
+|           |   \---raw                                         # Background-subtracted traces before NMF
+|           |           {name}.mat
 |           \---traces_ours_SNR_novideounmix_r2_mixout
-|   |       |   |   Table_time.mat                              # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
-|   |       |   +---alpha= {alpha}                              # Unmixed traces using this alpha
-|   |       |   |       {name}.mat
-|   |       |   \---raw                                         # Background-subtracted traces before NMF
-|   |       |           {name}.mat
-
+|               |   Table_time.mat                              # Processing time for NMF using different alpha (Table_time(:,1:end-1)) and background subtraction (Table_time(:,end)) 
+|               +---alpha= {alpha}                              # Unmixed traces using this alpha
+|               |       {name}.mat
+|               \---raw                                         # Background-subtracted traces before NMF
+|                       {name}.mat
+|
 +---template                                                    # filter template (flipped convolusion kernel) for temporal filtering
 |       1P_spike_tempolate.mat                                  # filter template of one-photon videos
 |       filter_template 100Hz {indicator}_ind_con=10.mat        # filter template of NAOMi videos with calcium {indicator}
 |       GCaMP6f_spike_tempolate_mean.mat                        # filter template of ABO videos
-
+|
 +---TemporalLabelingGUI                                         # MATLAB GUI to manually label transients for experimental videos
 |   |   NeuronFilter.m                                          # Main function to start the labeling GUI
 |   |   prepare_Label_1P.m                                      # Manually label one-photon videos
 |   |   prepare_Label_ABO.m                                     # Manually label ABO videos
-|   +---utility functions
-|   |       ...
+|   \---utility functions
+|           binTraces_temporal.m
+|           binVideo_temporal.m
+|           homo_filt.m
+|           normalizeValues.m
 |           
 +---TUnCaT archive                                              # TUnCaT code used to produce the results for the paper
-|       bin_trace_video.py
-|       demo_nmfunmix.py
-|       do_something_unmixing.bat                               # Example commands to run the scripts
-|       nmfunmix1_diag1_v1_shm_pertmin_MSE_novideo.py           # Function to apply TUnCaT to a set of input traces
-|       nmfunmix_MSE.py                                         # Function to apply NMF unmixing to a set of input traces
-|       traces_from_masks_mp_shm_neighbors.py                   # Function to calculate the raw neuron and background traces using SharedMemory
-|       traces_from_masks_numba_neighbors.py                    # Function to calculate the raw neuron and background traces using numba
-|       TUnCaT_1p_multi_novideounmix.py                         # Unmix one-photon videos using TUnCaT
-|       TUnCaT_ABO_multi_novideounmix.py                        # Unmix ABO videos using TUnCaT
-|       TUnCaT_simulation_multi_arg_novideounmix.py             # Unmix NAOMi videos using TUnCaT
-|       use_nmfunmix_mp_diag_v1_shm_MSE_novideo.py              # Function to apply TUnCaT to all input traces
-|       utils.py
+|   |   README.md                                               
+|   |   README.html                                               
+|   |   run_TUnCaT_all.bat                                      # A series of commands to run TUnCaT on all datasets
+|   |   demo_TUnCaT.ipynb                                       # Jupyter notebook of the demo script
+|   |   demo_TUnCaT.py                                          # (lv.0) Demo script
+|   |   run_TUnCaT.py                                           # (lv.1) Complete function to apply TUnCaT to a video with neuron masks
+|   |   traces_from_masks_mp_mmap_fn_neighbors.py               # (lv.2, part 1) Function to calculate the raw neuron and background traces using memory mapping
+|   |   traces_from_masks_mp_shm_neighbors.py                   # (lv.2, part 1) Function to calculate the raw neuron and background traces using SharedMemory
+|   |   traces_from_masks_numba_neighbors.py                    # (lv.2, part 1) Function to calculate the raw neuron and background traces using numba
+|   |   use_nmfunmix_mp_diag_v1_shm_MSE_novideo.py              # (lv.2, part 2) Function to apply TUnCaT to all input traces
+|   |   nmfunmix1_diag1_v1_shm_pertmin_MSE_novideo.py           # (lv.3) Function to apply TUnCaT to a set of input traces
+|   |   nmfunmix_MSE.py                                         # (lv.4) Function to apply NMF unmixing to a set of input traces
+|   |   TUnCaT_multi_1p.py                                      # Unmix one-photon videos using TUnCaT
+|   |   TUnCaT_multi_ABO.py                                     # Unmix ABO videos using TUnCaT
+|   |   TUnCaT_multi_NAOMi.py                                   # Unmix NAOMi videos using TUnCaT
+|   |   bin_trace_video.py
+|   |   utils.py
+|   \---data
+|           c28_163_244.h5                                      # The demo video
+|           FinalMasks_c28_163_244.mat                          # Neuron masks of the demo video
+|       
++---other methods                                       # Our wrapper of unmixing the same datasets using other published algorithms
+|       run_{method}_all.bat                            # A series of commands to run unmixing {method} on all datasets
+|       {method}_{...}_{data}.py                        # Unmix {data} using {method}
 |       
 \---SNR convertion                                      # Preprocessing code to convert the raw videos to SNR videos
         bat_SNR.bat                                     # Example commands to run the scripts
-        gen_SNR_videos.py                               # Generate SNR videos for ABO videos
-        gen_SNR_videos_1p.py                            # Generate SNR videos for one-photon videos
-        gen_SNR_videos_NAOMi7_time.py                   # Generate SNR videos for NAOMi videos
+        gen_SNR_videos_{data}.py                        # Generate SNR videos for {data}
         par1.py
         preprocessing_functions.py                      # Function to convert a raw video to an SNR video

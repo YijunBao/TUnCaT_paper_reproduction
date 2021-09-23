@@ -11,15 +11,14 @@ from preprocessing_functions import preprocess_video
 # %%
 if __name__ == '__main__':
     # folder of the raw videos
-    # rate_hz = 20 # frame rate of the video
-    dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    folder = '120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f' # sys.argv[1]
+    rate_hz = int(folder.split('_')[1][:-2]) # 30 # frame rate of the video
+    dir_video = 'F:\\NAOMi\\{}\\'.format(folder)
     # file names of the ".h5" files storing the raw videos. 
-    list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
-                'c25_163_267','c27_114_176','c28_161_149',
-                'c25_123_348','c27_122_121','c28_163_244']
+    list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
     sub_folder = ''
     # %% setting parameters
-    Mag = 0.5 # spatial magnification compared to ABO videos.
+    Mag = 0.785 # spatial magnification compared to ABO videos.
     Table_time = np.zeros((len(list_Exp_ID)))
 
     useSF=True # True if spatial filtering is used in pre-processing.
@@ -41,13 +40,16 @@ if __name__ == '__main__':
     gauss_filt_size = 50*Mag # standard deviation of the spatial Gaussian filter in pixels
     num_median_approx = 1000 # number of frames used to caluclate median and median-based standard deviation
 
-    # filename_TF_template = '../template/1P_spike_tempolate.h5'
-    # h5f = h5py.File(filename_TF_template,'r')
-    # Poisson_filt = np.array(h5f['filter_tempolate']).squeeze().astype('float32')
-    filename_TF_template = '../template/1P_spike_tempolate.mat'
-    h5f = loadmat(filename_TF_template)
-    Poisson_filt = h5f['filter_tempolate'].squeeze().astype('float32')
-    Poisson_filt = Poisson_filt[Poisson_filt>np.exp(-1)] # temporal filter kernel
+    h5f = loadmat('../template/filter_template 100Hz {}_ind_con=10.mat'.format(folder.split('_')[-1]))
+    fs_template = 100
+    Poisson_template = h5f['template'].squeeze()
+    peak = Poisson_template.argmax()
+    length = Poisson_template.shape
+    xp = np.arange(-peak,length-peak,1)/fs_template
+    x = np.arange(np.round(-peak*rate_hz/fs_template), np.round((length-peak)*rate_hz/fs_template)+1, 1)/rate_hz
+    Poisson_filt = np.interp(x,xp,Poisson_template)
+    Poisson_filt = Poisson_filt[Poisson_filt>=(Poisson_filt.max()*np.exp(-1))].astype('float32')
+    Poisson_filt = (Poisson_filt / Poisson_filt.sum()).astype('float32')
     # dictionary of pre-processing parameters
     Params = {'gauss_filt_size':gauss_filt_size, 'num_median_approx':num_median_approx, 
         'Poisson_filt': Poisson_filt}
@@ -55,7 +57,7 @@ if __name__ == '__main__':
     # Generate SNR videos
     for (eid,Exp_ID) in enumerate(list_Exp_ID):
         network_input, start = preprocess_video(dir_video, Exp_ID, Params, None, \
-            useSF=useSF, useTF=useTF, useSNR=useSNR, prealloc=prealloc) # dir_network_input
+            useSF=useSF, useTF=useTF, useSNR=useSNR, prealloc=prealloc) # video_input, _ = 
         finish = time.time()
         Table_time[eid] = finish-start
 

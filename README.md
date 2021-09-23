@@ -25,25 +25,36 @@ The one-photon videos were recorded in our lab. We stored the videos in `data/1p
 
 
 ## Generating SNR videos (Python)
-In addition to unmix the traces from raw videos, we also unmixed the traces for SNR videos. We used the code in `SNR convertion` to convert all the raw videos to SNR videos. Required packages: numpy, scipy, h5py, numba, pyfftw, cpuinfo, opencv. Follow `bat_SNR.bat` to run the code. The template used in temporal filtering are stored in `template`. 
+In addition to unmix the traces from raw videos, we also unmixed the traces for SNR videos. We used the code in the folder `SNR convertion` to convert all the raw videos to SNR videos. Required packages: numpy, scipy, h5py, numba, pyfftw, cpuinfo, opencv. Follow `bat_SNR.bat` to run the code. The template used in temporal filtering are stored in the folder `template`. 
 
 
 # Manually label GT transients (MATLAB)
-We manually labeled the GT transients for experimental videos using a MATLAB GUI in `TemporalLabelingGUI`. We used `prepare_Label_ABO.m` to label ABO videos and used `prepare_Label_1P.m` to label one-photon vieos. 
+We manually labeled the GT transients for experimental videos using a MATLAB GUI in the folder `TemporalLabelingGUI`. We used `prepare_Label_ABO.m` to label ABO videos and used `prepare_Label_1P.m` to label one-photon vieos. 
 
 <img src="readme/example manual labeling GUI.png" height="500"/>
 
+*Select neuron and potential transient.* 
 A typical GUI window is shown above. The two lists on the top right corner are the list of neurons (top) and the list of potential transients of that neuron (bottom). When double clicking the numbers in the lists, that neuron or transient will be displayed. The buttons "Forward Neuron" and "Backward Neuron" can display the neuron with one index larger or smaller than the current neuron. 
+
+*Display panels.*
 The "Mask" panel shows the masks of the neuron of interest (red) and neighboring neurons (other colors), overlaid on the maximum projection image. The "Trace" panel shows the SNR trace of the selected neuron; the green dashed horizontal line shows the SNR threshold; the rectangles show periods higher than the SNR threshold; the trangles show prominant peaks. Squares overlaid with trangles show potential transients to be labeled, and these potential transients are listed in the second list on the top right. The "Video" panel plays the entire video after clicking "Play Video", or plays a short video from 20 frames before the start of the transient to 20 frames after the end of the transient after clicking "Select Spike", "Yes Spike", "No Spike", or "Replay Spike Video". When the video is playing, a red vertical line is moving in the "Trace" panel along the video frames. After the video is played, the "Video" panel will display the mean image over the transient. 
+
+*Label potential transients as true or false.*
 There are eight buttons on the bottom right. "Play Video" will play the entire video. "Yes Active" and "No Active" are currently not used. "Save Changes" saves the labels to `TemporalLabelingGUI/output/output{}.mat`. "Select Spike" will start labeling the spikes of this neuron, and it will play the video of the first transient. "Yes Spike" will label this transient as a true transient and move to the next transient. "No Spike" will label this transient as a false transient and move to the next transient. "Replay Spike Video" will replay this transient. 
 
 
 # TUnCaT code (Python)
-The version of TUnCaT used in this paper and some calling scripts to process the videos are stored in `TUnCaT archive`. Currently python 3.8 or newer is required to use the SharedMemory module. Required packages: numpy, scipy, h5py, scikit-learn, numba. Follow `do_something.bat` to run the code. 
+The version of TUnCaT used in this paper is stored in the folder `TUnCaT archive`. Required packages: numpy, scipy, h5py, scikit-learn, numba. A demo is provided. 
+
+The wrapper scripts to process all the test datasets are stores in the same folder. Python 3.8 or newer is required to run the wrapper scripts. Run `run_TUnCaT_all.bat` to run all the wrapper scripts. 
+
+
+# Other unmixing methods (Python)
+In our paper, we compared the performance of TUnCaT with three peer temporal unmixing methods: [FISSA](https://github.com/rochefort-lab/fissa) (version 0.7.2), [CNMF](https://github.com/flatironinstitute/CaImAn) (version 1.6.4) , and the [Allen SDK](https://github.com/AllenInstitute/AllenSDK) (version 2.7.0). We provided the wrapper scripts to run these methods on all datasets in the foler `other methods`. We also provided .bat files to include all the running commands for each algorithm. Follow the instructions of these algorithms on their official websites to install them. 
 
 
 # Evaluation code (MATLAB)
-We evaluated the accuracy of the unmixed traces by calculating the F1 scores through cross-valitaion. The code is stored in `evaluation`. The main scripts are `eval_{data}_{method}.m`, and the output scores can be summarized by `summary_timing_ABO_all.m`. The F1 scores through cross-valiation are stored in `results/{data}/evaluation`. 
+We evaluated the accuracy of the unmixed traces by calculating the F1 scores through cross-valitaion. The code is stored in the folder `evaluation`. The main scripts are `eval_{data}_{method}.m`, and the output scores can be summarized by `summary_timing_ABO_all.m`. The F1 scores through cross-valiation are stored in `results/{data}/evaluation`. 
 
 
 # Unmixing results and F1 scores

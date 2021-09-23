@@ -68,13 +68,8 @@ def nmfunmix(Ftmix, nbin=1, tol=1e-4, max_iter=20000, alpha=1, l1_ratio=0.5, eps
 
     # Normalize and shift the traces
     medFt = np.median(Ftmix, 0)
-    # minFt = Ftmix.min(axis=0) 
     minFt = Ftmix.min() 
-    # minFt = np.quantile(Ftmix, 0.08, axis=0) 
-    # minFt = medFt 
     Ftmix = Ftmix - minFt
-    # np.clip(Ftmix, 0, None, out=Ftmix)
-    # Ftmix[Ftmix<0] = 0
     q12 = np.quantile(Ftmix[:,0], [0.25, 0.5], axis=0) 
     noise = (q12[1]-q12[0])/(np.sqrt(2)*special.erfinv(0.5))
     Ftmix = Ftmix/noise + epsilon
@@ -139,11 +134,8 @@ def nmfunmix(Ftmix, nbin=1, tol=1e-4, max_iter=20000, alpha=1, l1_ratio=0.5, eps
         tempmixout = tempmixout / tempmixout.sum(1)[:,np.newaxis]
 
     # reorder and scale the outputs to match the inputs
-    # traceout = Ftdemix.dot(tempmixIDs * np.diag(mixout)[np.newaxis,:])
     traceout = Ftdemix.dot(tempmixIDs * mixout)
     mixout = tempmixIDs.T.dot(mixout)  # reorder the mixing matrix
-    # mixout = mixout / mixout.sum(1)
-    # mixout[np.isnan(mixout)] = 0
     # mixout = mixout / np.diag(mixout)[:,np.newaxis]
     subtraces = (traceout.sum(0) == 0).nonzero()[0]
     if subtraces.size:

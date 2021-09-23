@@ -1,12 +1,11 @@
 import numpy as np
 import multiprocessing as mp
-from multiprocessing.shared_memory import SharedMemory
 from scipy.io import savemat
 from nmfunmix1_diag1_v1_shm_pertmin_MSE_novideo import nmfunmix1
 
 
 def use_nmfunmix(traces, bgtraces, outtraces, list_neighbors, list_alpha=[0], Qclip=0, \
-        th_pertmin=1, epsilon=0, use_direction=False, nbin=1, bin_option='downsample'):
+        th_pertmin=1, epsilon=0, use_direction=False, nbin=1, bin_option='downsample', flexible_alpha=True):
     ''' Unmix the traces of all neurons using NMF, and obtain the unmixed traces and the mixing matrix. 
     Inputs: 
         traces (numpy.ndarray of float, shape = (T,n)): The raw traces of all neurons.
@@ -24,7 +23,7 @@ def use_nmfunmix(traces, bgtraces, outtraces, list_neighbors, list_alpha=[0], Qc
         th_pertmin (float, default to 1): Maximum pertentage of unmixed traces equaling to the trace minimum.
             th_pertmin = 1 means no requirement is applied. 
         epsilon (float, default to 0): The minimum value of the input traces after scaling and shifting. 
-        use_direction (bool, default to False): Whether a direction requirement is applied.
+        use_direction (bool, default to False): Whether a direction requirement is applied to the output traces.
             A direction requirement means the positive transients should be farther away from baseline than negative transients.
         nbin (int, default to 1): The temporal downsampling ratio.
             nbin = 1 means temporal downsampling is not used.
@@ -33,6 +32,10 @@ def use_nmfunmix(traces, bgtraces, outtraces, list_neighbors, list_alpha=[0], Qc
             'downsample' means keep one frame and discard "nbin" - 1 frames for every "nbin" frames.
             'sum' means each binned frame is the sum of continuous "nbin" frames.
             'mean' means each binned frame is the mean of continuous "nbin" frames.
+        flexible_alpha (bool, default to True): Whether a flexible alpha strategy is used 
+            when the smallest alpha in "list_alpha" already caused over-regularization.
+            False means the final alpha is the smallest element in "list_alpha".
+            True means trying to recursively divide the smallest alpha by 2 until no over-regularization exists.
 
     Outputs:
         demix (numpy.ndarray of float, shape = (T,n)): The resulting unmixed traces. 
@@ -65,7 +68,7 @@ def use_nmfunmix(traces, bgtraces, outtraces, list_neighbors, list_alpha=[0], Qc
     # Apply NMF to unmix each group of input traces corresponding to each neuron.
     p = mp.Pool(mp.cpu_count())
     results = p.starmap(nmfunmix1, [(i, traces_clip[:, list_neighbors[i]], outtrace_clip[:,i], list_alpha, 
-        th_pertmin, epsilon, use_direction, nbin, bin_option) for i in range(n)], chunksize=1)
+        th_pertmin, epsilon, use_direction, nbin, bin_option, flexible_alpha) for i in range(n)], chunksize=1)
     p.close()
 
     # See the explanation of "nmfunmix1" for detailed explanation of these output quantities

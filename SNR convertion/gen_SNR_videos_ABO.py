@@ -11,15 +11,14 @@ from preprocessing_functions import preprocess_video
 # %%
 if __name__ == '__main__':
     # folder of the raw videos
-    # rate_hz = 20 # frame rate of the video
-    dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    # rate_hz = 30 # frame rate of the video
+    dir_video = 'D:\\ABO\\20 percent 200\\'
     # file names of the ".h5" files storing the raw videos. 
-    list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
-                'c25_163_267','c27_114_176','c28_161_149',
-                'c25_123_348','c27_122_121','c28_163_244']
+    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
+        '510214538','524691284','527048992','531006860','539670003']
     sub_folder = ''
     # %% setting parameters
-    Mag = 0.5 # spatial magnification compared to ABO videos.
+    Mag = 1 # spatial magnification compared to ABO videos.
     Table_time = np.zeros((len(list_Exp_ID)))
 
     useSF=True # True if spatial filtering is used in pre-processing.
@@ -41,16 +40,16 @@ if __name__ == '__main__':
     gauss_filt_size = 50*Mag # standard deviation of the spatial Gaussian filter in pixels
     num_median_approx = 1000 # number of frames used to caluclate median and median-based standard deviation
 
-    # filename_TF_template = '../template/1P_spike_tempolate.h5'
+    # filename_TF_template = '../template/GCaMP6f_spike_tempolate_mean.h5'
     # h5f = h5py.File(filename_TF_template,'r')
     # Poisson_filt = np.array(h5f['filter_tempolate']).squeeze().astype('float32')
-    filename_TF_template = '../template/1P_spike_tempolate.mat'
+    filename_TF_template = '../template/GCaMP6f_spike_tempolate_mean.mat'
     h5f = loadmat(filename_TF_template)
     Poisson_filt = h5f['filter_tempolate'].squeeze().astype('float32')
     Poisson_filt = Poisson_filt[Poisson_filt>np.exp(-1)] # temporal filter kernel
     # dictionary of pre-processing parameters
     Params = {'gauss_filt_size':gauss_filt_size, 'num_median_approx':num_median_approx, 
-        'Poisson_filt': Poisson_filt}
+        'Poisson_filt': Poisson_filt} 
 
     # Generate SNR videos
     for (eid,Exp_ID) in enumerate(list_Exp_ID):

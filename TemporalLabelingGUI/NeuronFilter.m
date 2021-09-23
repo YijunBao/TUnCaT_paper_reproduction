@@ -1,6 +1,5 @@
 %
 % NeuronFilter - Temporal Labeling GUI for calcium imaging videos of active neurons
-% Last updated 8/29/2019 by Agnim Agarwal
 %
 
 function NeuronFilter(vid, Mask, markings, trace) % markings variable =  for external markings OR 0 for no file input

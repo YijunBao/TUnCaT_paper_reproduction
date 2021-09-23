@@ -6,65 +6,42 @@ from scipy.io import savemat, loadmat
 import h5py
 
 # if (sys.version_info.major+sys.version_info.minor/10)>=3.8
-try:
-    from multiprocessing.shared_memory import SharedMemory
-    from traces_from_masks_numba_neighbors import traces_bgtraces_from_masks_numba_neighbors
-    # from traces_from_masks_mp_share import bgtraces_from_masks, traces_from_masks, traces_bgtraces_from_masks
-    # from traces_from_masks_mp_share import traces_bgtraces_from_masks
-    from traces_from_masks_mp_shm_neighbors import traces_bgtraces_from_masks_neighbors
-    # from traces_from_masks_nooverlap_mp_shm import traces_bgtraces_from_masks
-    from use_nmfunmix_mp_diag_v1_shm_MSE_novideo import use_nmfunmix
-    # from r_neuropil_stdmin import estimate_contamination_ratios
-except:
-    raise ImportError('No SharedMemory module. Please use Python version >=3.8, or use memory mapping instead of SharedMemory')
+from multiprocessing.shared_memory import SharedMemory
+from traces_from_masks_numba_neighbors import traces_bgtraces_from_masks_numba_neighbors
+from traces_from_masks_mp_shm_neighbors import traces_bgtraces_from_masks_shm_neighbors
+from use_nmfunmix_mp_diag_v1_shm_MSE_novideo import use_nmfunmix
 
 
 if __name__ == '__main__':
-    # sys.argv = ['py', '0', 'Raw', '1', '1', '0', '0']
-    # list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30]  # 
+    # sys.argv = ['py', 'Raw', '1']
     list_alpha = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10] # 
-    # list_alpha = [0.01, 0.02, 0.03, 0.05] # 
-    # list_alpha = [1] # 
     dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
     list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
                 'c25_163_267','c27_114_176','c28_161_149',
                 'c25_123_348','c27_122_121','c28_163_244']
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
-    video_type = sys.argv[2]
-    # video_type = 'SNR' # 'Raw' # 
-    # eid_select = int(sys.argv[1])
+    video_type = sys.argv[1] # 'Raw' # 'SNR' # 
 
-    Qclip = 0  # 0.08 # 
-    nbin = int(sys.argv[3]) # 1
+    Qclip = 0
+    nbin = int(sys.argv[2]) # 1 # 
+    bin_option = 'downsample' # 'mean' # 'sum' # 
     if nbin == 1:
-        bin_option = 'downsample'
         addon = ''
     else:
-        bin_option = sys.argv[1] # 'mean' # 'sum' # 
-        if bin_option == 'mean':
-            list_alpha = [x/10 for x in list_alpha]
-            addon = '_'+bin_option +str(nbin)
-        else:
-            addon = '_'+bin_option +str(nbin)
+        addon = '_'+bin_option +str(nbin)
 
-    th_pertmin = float(sys.argv[4])
-    epsilon = float(sys.argv[5])
-    use_direction = bool(int(sys.argv[6]))
-    if th_pertmin < 1:
-        addon += '_pertmin='+str(th_pertmin)
-    if epsilon > 0:
-        addon += '_eps='+str(epsilon)
-    if use_direction:
-        addon += '_range2'
+    th_pertmin = 1
+    epsilon = 0
+    use_direction = False
+    flexible_alpha = True
     addon += '_merge_novideounmix_r2_mixout'
-    # addon += '_merge_novideounmix_r2_fixed_alpha'
 
     # Load video and FinalMasks
     if video_type == 'SNR':
-        varname = 'network_input' # 
+        varname = 'network_input'
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:
-        varname = 'mov' # 
+        varname = 'mov'
         dir_video_SNR = dir_video
     dir_masks = os.path.join(dir_video, 'GT Masks merge')
     dir_traces = os.path.join(dir_video, 'traces_ours_'+video_type + addon)
@@ -75,8 +52,6 @@ if __name__ == '__main__':
         os.makedirs(dir_trace_raw)        
     
     for (ind_Exp, Exp_ID) in enumerate(list_Exp_ID):
-        # if ind_Exp > eid_select:
-        #     continue
         print(Exp_ID)
         start = time.time()
         filename_video = os.path.join(dir_video_SNR, Exp_ID + '.h5')
@@ -88,7 +63,6 @@ if __name__ == '__main__':
         video = np.frombuffer(shm_video.buf, dtype = file_video[varname].dtype)
         video[:] = file_video[varname][()].ravel()
         video = video.reshape(file_video[varname].shape)
-        # video_name = shm_video.name
         file_video.close()
 
         filename_masks = os.path.join(dir_masks, 'FinalMasks_' + Exp_ID + '.mat')
@@ -104,36 +78,19 @@ if __name__ == '__main__':
         FinalMasks = np.frombuffer(shm_masks.buf, dtype = 'bool')
         FinalMasks[:] = Masks.ravel()
         FinalMasks = FinalMasks.reshape(Masks.shape)
-        # masks_sum = FinalMasks.astype('uint8').sum(0)
-        # masks_name = shm_masks.name
         del Masks
         finish = time.time()
         print(finish - start)
 
         # Calculate traces and background traces
         start = time.time()
-        # r_bg = np.sqrt(FinalMasks.sum(-1).sum(-1).mean()/np.pi)*2.5
-        # [xx, yy] = np.meshgrid(np.arange(Ly), np.arange(Lx))
-        # xx = xx.astype('uint16')
-        # shm_xx = SharedMemory(create=True, size=xx.nbytes)
-        # xx_temp = np.frombuffer(shm_xx.buf, dtype='uint16')
-        # xx_temp[:] = xx.ravel()
-        # yy = yy.astype('uint16')
-        # shm_yy = SharedMemory(create=True, size=yy.nbytes)
-        # yy_temp = np.frombuffer(shm_yy.buf, dtype='uint16')
-        # yy_temp[:] = yy.ravel()
-
         if FinalMasks.sum()*T >= 7e7: # Use multiprocessing is faster for large videos
-            (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_neighbors(shm_video, video_dtype, \
-                video_shape, shm_masks, masks_shape, FinalMasks) # , masks_sum
+            (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_shm_neighbors(
+                shm_video, video_dtype, video_shape, shm_masks, masks_shape, FinalMasks)
         else: # Use numba is faster for small videos
             (traces, bgtraces, outtraces, list_neighbors) = traces_bgtraces_from_masks_numba_neighbors(
-                video, FinalMasks) # , masks_sum
+                video, FinalMasks)
 
-        # r = estimate_contamination_ratios(traces, bgtraces)
-        # r_dict = estimate_contamination_ratios(traces, bgtraces)
-        # r = r_dict['r']
-        # bgtraces *= r
         finish = time.time()
         print('trace calculation time: {} s'.format(finish - start))
         Table_time[ind_Exp, -1] = finish-start
@@ -145,9 +102,9 @@ if __name__ == '__main__':
             print(Exp_ID, 'alpha =', alpha)
             # Do NMF unmixing
             start = time.time()
-            traces_nmfdemix, list_mixout, list_MSE, list_final_alpha, list_n_iter = use_nmfunmix(traces, bgtraces, outtraces, \
-                list_neighbors, [alpha], Qclip, th_pertmin, epsilon, use_direction, nbin, bin_option)
-            # traces_nmfdemix = traces - bgtraces
+            traces_nmfdemix, list_mixout, list_MSE, list_final_alpha, list_n_iter = use_nmfunmix(
+                traces, bgtraces, outtraces, list_neighbors, [alpha], Qclip, \
+                th_pertmin, epsilon, use_direction, nbin, bin_option, flexible_alpha)
             finish = time.time()
             print('unmixing time: {} s'.format(finish - start))
             Table_time[ind_Exp, ind_alpha] = finish-start
@@ -159,10 +116,6 @@ if __name__ == '__main__':
             savemat(os.path.join(dir_trace_unmix, Exp_ID+".mat"), {"traces_nmfdemix": traces_nmfdemix,\
                 "list_mixout":list_mixout, "list_MSE":list_MSE, "list_final_alpha":list_final_alpha, "list_n_iter":list_n_iter})
 
-        # shm_xx.close()
-        # shm_xx.unlink()
-        # shm_yy.close()
-        # shm_yy.unlink()
         shm_video.close()
         shm_video.unlink()
         shm_masks.close()

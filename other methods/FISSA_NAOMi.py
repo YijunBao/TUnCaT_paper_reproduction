@@ -1,13 +1,11 @@
 # %%
 import sys
 import os
-import math
 import numpy as np
 import time
 import h5py
 
 from scipy.io import savemat, loadmat
-import multiprocessing as mp
 import fissa
 
 from sklearn.exceptions import ConvergenceWarning
@@ -18,16 +16,13 @@ np.seterr(divide='ignore',invalid='ignore')
 
 # %%
 if __name__ == '__main__':
-    # list_alpha = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10]  # 
-    list_alpha = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1]  # 
-    # list_Exp_ID = ['503109347','539670003']
-    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
-        '510214538','524691284','527048992','531006860','539670003']
+    # list_alpha = [1, 2, 3, 5, 10, 20, 30, 50, 100]  # 
+    list_alpha = [0.001, 0.002, 0.003, 0.005, 0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1]  # 
+    list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
-    video_type = sys.argv[1]
-    # video_type = 'Raw' # 'SNR' # 
+    video_type = sys.argv[1] # 'Raw' # 'SNR' # 
 
-    dir_video = 'D:\\ABO\\20 percent 200' 
+    dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
     if video_type == 'SNR':
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:
@@ -92,14 +87,6 @@ if __name__ == '__main__':
             if not os.path.exists(dir_trace_unmix):
                 os.makedirs(dir_trace_unmix)        
             savemat(os.path.join(dir_trace_unmix, Exp_ID+".mat"), {"unmixed_traces": unmixed_traces, "list_n_iter":list_n_iter})
-
-            # # Calculate median and median-based std to normalize each trace into SNR trace
-            # # The median-based std is from the raw trace, because FISSA unmixing can change the noise property.
-            # med_raw = np.quantile(raw_traces, np.array([0.5, 0.25]), axis=1)
-            # med_unmix = np.quantile(unmixed_traces, np.array([0.5, 0.25]), axis=1)
-            # mu_unmix = med_unmix[0]
-            # sigma_raw = (med_raw[0]-med_raw[1])/(math.sqrt(2)*special.erfinv(0.5))
-
 
         savemat(os.path.join(dir_traces, "Table_time.mat"), {"Table_time": Table_time, 'list_alpha': list_alpha})
 

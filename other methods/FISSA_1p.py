@@ -1,13 +1,11 @@
 # %%
 import sys
 import os
-import math
 import numpy as np
 import time
 import h5py
 
 from scipy.io import savemat, loadmat
-import multiprocessing as mp
 import fissa
 
 from sklearn.exceptions import ConvergenceWarning
@@ -24,16 +22,14 @@ if __name__ == '__main__':
                 'c25_163_267','c27_114_176','c28_161_149',
                 'c25_123_348','c27_122_121','c28_163_244']
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
-    video_type = sys.argv[1]
-    # video_type = 'SNR' # 'Raw' # 
-    # eid_select = int(sys.argv[2])
+    video_type = sys.argv[1] # 'Raw' # 'SNR' # 
 
     if video_type == 'SNR':
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:
         dir_video_SNR = dir_video
     dir_masks = os.path.join(dir_video, 'GT Masks merge')
-    dir_traces = os.path.join(dir_video, 'traces_FISSA_'+video_type+'_merge_n_iter')
+    dir_traces = os.path.join(dir_video, 'traces_FISSA_'+video_type+'_merge')
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 
     dir_trace_raw = os.path.join(dir_traces, "raw")
@@ -41,8 +37,6 @@ if __name__ == '__main__':
         os.makedirs(dir_trace_raw)        
 
     for (ind_Exp, Exp_ID) in enumerate(list_Exp_ID):
-        # if ind_Exp > eid_select:
-        #     continue
         filename_video = os.path.join(dir_video_SNR, Exp_ID + '.h5')
         file_video = h5py.File(filename_video, 'r')
         video = np.array(file_video[list(file_video.keys())[0]])
@@ -94,14 +88,6 @@ if __name__ == '__main__':
             if not os.path.exists(dir_trace_unmix):
                 os.makedirs(dir_trace_unmix)        
             savemat(os.path.join(dir_trace_unmix, Exp_ID+".mat"), {"unmixed_traces": unmixed_traces, "list_n_iter":list_n_iter})
-
-            # # Calculate median and median-based std to normalize each trace into SNR trace
-            # # The median-based std is from the raw trace, because FISSA unmixing can change the noise property.
-            # med_raw = np.quantile(raw_traces, np.array([0.5, 0.25]), axis=1)
-            # med_unmix = np.quantile(unmixed_traces, np.array([0.5, 0.25]), axis=1)
-            # mu_unmix = med_unmix[0]
-            # sigma_raw = (med_raw[0]-med_raw[1])/(math.sqrt(2)*special.erfinv(0.5))
-
 
         savemat(os.path.join(dir_traces, "Table_time.mat"), {"Table_time": Table_time, 'list_alpha': list_alpha})
 

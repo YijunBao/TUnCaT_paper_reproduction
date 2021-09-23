@@ -1,12 +1,9 @@
 import numpy as np
 from nmfunmix_MSE import nmfunmix
-from scipy.io import savemat
-import multiprocessing as mp
-from multiprocessing.shared_memory import SharedMemory
 
 
-def nmfunmix1(i, trace, outtrace, list_alpha=[0], \
-        th_pertmin=1, epsilon=0, use_direction=False, nbin=1, bin_option='downsample'):
+def nmfunmix1(i, trace, outtrace, list_alpha=[0], th_pertmin=1, epsilon=0, \
+        use_direction=False, nbin=1, bin_option='downsample', flexible_alpha=True):
     ''' Unmix the input traces in "trace" and "outtrace" using NMF, and obtain the unmixed traces and the mixing matrix. 
     Inputs: 
         i (int): The index of the neuron of interest.
@@ -23,7 +20,7 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], \
         th_pertmin (float, default to 1): Maximum pertentage of unmixed traces equaling to the trace minimum.
             th_pertmin = 1 means no requirement is applied. 
         epsilon (float, default to 0): The minimum value of the input traces after scaling and shifting. 
-        use_direction (bool, default to False): Whether a direction requirement is applied.
+        use_direction (bool, default to False): Whether a direction requirement is applied to the output traces.
             A direction requirement means the positive transients should be farther away from baseline than negative transients.
         nbin (int, default to 1): The temporal downsampling ratio.
             nbin = 1 means temporal downsampling is not used.
@@ -32,6 +29,10 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], \
             'downsample' means keep one frame and discard "nbin" - 1 frames for every "nbin" frames.
             'sum' means each binned frame is the sum of continuous "nbin" frames.
             'mean' means each binned frame is the mean of continuous "nbin" frames.
+        flexible_alpha (bool, default to True): Whether a flexible alpha strategy is used 
+            when the smallest alpha in "list_alpha" already caused over-regularization.
+            False means the final alpha is the smallest element in "list_alpha".
+            True means trying to recursively divide the smallest alpha by 2 until no over-regularization exists.
 
     Outputs:
         traceout (numpy.ndarray of float, shape = (T,n)): The resulting unmixed traces. 
@@ -57,6 +58,10 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], \
     '''
 
     eps = np.finfo(np.float32).eps
+    if not isinstance(list_alpha, list):
+        list_alpha = [list_alpha]
+    else:
+        list_alpha.sort()
 
     tracein = np.concatenate([trace, outtrace[:,np.newaxis]], axis=1)
     # call nmfunmix
@@ -79,7 +84,7 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], \
         question_flag = pertmin or subtraces.size or negative
         
         # question_flag == True means the alpha is too large. 
-        if question_flag: # False: # 
+        if question_flag:
             jj = j*1
             if jj > 0: # If the alpha is too large only at some late alpha, then return to the privous alpha
                 while jj > 0 and question_flag:
@@ -96,7 +101,9 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], \
                     else:
                         negative = False
                     question_flag = pertmin or subtraces.size or negative 
-            if jj == 0:  # if the first alphas is already too large, then iteratively divide alpha by 2.
+            if jj == 0 and flexible_alpha:  
+                # if the first alphas already caused over-regularization, and flexible alpha strategy is used,
+                # then recursively divide alpha by 2 until no over-regularization exists.
                 alpha_temp = list_alpha[0]
                 while question_flag and alpha_temp>list_alpha[0]/5: # 1e-4: # 
                     alpha_temp = alpha_temp/2

@@ -85,8 +85,7 @@ if __name__ == "__main__":
                 'c25_163_267','c27_114_176','c28_161_149',
                 'c25_123_348','c27_122_121','c28_163_244']
     Table_time = np.zeros(len(list_Exp_ID))
-    p = int(sys.argv[2]) # 1 # 
-    eid_select = int(sys.argv[3])
+    p = 1
 
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
     if video_type == 'SNR':
@@ -102,8 +101,6 @@ if __name__ == "__main__":
 
     GTMask = {}
     for (cnt, Exp_ID) in enumerate(list_Exp_ID):
-        if cnt > eid_select:
-            continue
         filename_masks = os.path.join(dir_masks, 'FinalMasks_' + Exp_ID + '.mat')
         try:
             file_masks = loadmat(filename_masks)
@@ -114,12 +111,10 @@ if __name__ == "__main__":
             file_masks.close()
         GTMask[Exp_ID] = Masks  
 
-    Names_raw = glob.glob(dir_video_SNR+'*_memmap__*.mmap') #_512
+    Names_raw = glob.glob(dir_video_SNR+'*_memmap__*.mmap')
 
 
     for (cnt, Exp_ID) in enumerate(list_Exp_ID):
-        if cnt > eid_select:
-            continue
         print(Exp_ID)
         Name_mmap = [x for x in Names_raw if Exp_ID in x ]
         if len(Name_mmap) != 1:
@@ -143,18 +138,13 @@ if __name__ == "__main__":
                     'swap_dim': False,  # for some movies needed
                     'kernel': None}
 
-        roi_cons = GTMask[list_Exp_ID[cnt]]#name[0:3]]
+        roi_cons = GTMask[list_Exp_ID[cnt]]
         
         
         c, dview, n_processes = cm.cluster.setup_cluster(
                 backend='local', n_processes=None, single_thread=False)
         
         # # % LOAD MEMMAP FILE
-        # if extn == '.mmap':
-        #     Yr, dims, T = cm.load_memmap(fname_new)
-        # else:
-        #     mmapping.save_memmap([fname_new], base_name=list_Exp_ID[cnt], order='C')
-        #     Yr, dims, T = cm.load_memmap(fname_new)
         Yr, dims, T = cm.load_memmap(fname_new)
         Yr.max()
         
@@ -256,7 +246,6 @@ if __name__ == "__main__":
         log_files = glob.glob('*_LOG_*')
         for log_file in log_files:
             os.remove(log_file)
-        # os.remove(fname_new)
 
         Table_time[cnt] = finish - start
 
