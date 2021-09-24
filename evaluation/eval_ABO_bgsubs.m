@@ -5,21 +5,25 @@ clear;
 %% choose video file
 list_baseline_std = {'_ksd-psd'}; % '', 
 % list_spike_type = {'only_BGSubs'}; % 
-list_spike_type = {'include','only','exclude'}; % 
+list_spike_type = {'ABO'}; % 
 % list_spike_type = cellfun(@(x) [x,'_noBGSubs'], list_spike_type, 'UniformOutput',false);
 % spike_type = 'exclude'; % {'include','exclude','only'};
 sigma_from = 'Raw'; % {'Raw','Unmix'}; 
 % video='Raw'; % {'Raw','SNR'}
 list_video= {'Raw','SNR'};
-dir_video='D:\ABO\20 percent 200';
-dir_label = 'C:\Matlab Files\TemporalLabelingGUI-master';
+% dir_video='D:\ABO\20 percent 200';
+% dir_label = 'C:\Matlab Files\TemporalLabelingGUI-master';
+dir_video = '..\data\ABO';
+dir_label = [dir_video,'\GT transients'];
 list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
              '510214538';'524691284';'527048992';'531006860';'539670003'};
 % list_Exp_ID = list_Exp_ID([2,3]);
 num_Exp=length(list_Exp_ID);
 MovMedianSubs = contains(list_spike_type{1},'MovMedian'); % false;
 
-dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
+% dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
+load('..\template\GCaMP6f_spike_tempolate_mean.mat','filter_tempolate');
+dFF = filter_tempolate;
 dFF = dFF(dFF>exp(-1));
 dFF = dFF'/sum(dFF);
 
@@ -118,6 +122,9 @@ for tid = 1:length(list_spike_type)
         end
         fprintf('\b\b\b\b\b\b\b\b\b\b\b');
         %%
+        if ~exist(spike_type)
+            mkdir(spike_type);
+        end
         save(sprintf('%s\\scores_split_bgsubs_ex_%sVideo%s.mat',spike_type,video,baseline_std),...
             'list_recall','list_precision','list_F1','list_thred_ratio');
         mean_F1 = squeeze(mean(list_F1,1));

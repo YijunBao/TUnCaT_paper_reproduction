@@ -31,7 +31,7 @@ In addition to unmix the traces from raw videos, we also unmixed the traces for 
 # Manually label GT transients (MATLAB)
 We manually labeled the GT transients for experimental videos using a MATLAB GUI in the folder `TemporalLabelingGUI`. We used `prepare_Label_ABO.m` to label ABO videos and used `prepare_Label_1P.m` to label one-photon vieos. 
 
-<img src="readme/example manual labeling GUI.png" height="500"/>
+<img src="readme/manual labeling GUI.png" height="500"/>
 
 *Select neuron and potential transient.* 
 A typical GUI window is shown above. The two lists on the top right corner are the list of neurons (top) and the list of potential transients of that neuron (bottom). When double clicking the numbers in the lists, that neuron or transient will be displayed. The buttons "Forward Neuron" and "Backward Neuron" can display the neuron with one index larger or smaller than the current neuron. 

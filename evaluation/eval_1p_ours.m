@@ -2,7 +2,10 @@ clear;
 % addpath(genpath('C:\Matlab Files\Unmixing'));
 % addpath(genpath('C:\Matlab Files\Filter'));
 %%
-dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_label = [dir_video,'split\'];
+dir_video = '..\data\ABO';
+dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
     'c25_123_348','c27_122_121','c28_163_244'};
@@ -11,11 +14,10 @@ list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
 list_spike_type = {'1p'}; % {'only','include','exclude'};
 % spike_type = 'exclude'; % {'include','exclude','only'};
 list_sigma_from = {'Unmix'}; % {'Raw','Unmix'}; 
-dir_label = [dir_video,'split\'];
 
 method = 'ours'; % {'FISSA','ours'}
 list_video={'Raw','SNR'}; % {'Raw','SNR'}
-addon = '_merge_novideounmix_r2_mixout'; %  % '_eps=0.1'; % _n_iter
+addon = '_novideounmix_r2_mixout'; %  % '_eps=0.1'; % _n_iter
 list_part1={''}; % , '_pertmin=0.5', '_pertmin=0.16'
 % part1 = ''; %, '_diag11'
 list_part2 = {''}; % , '_eps=0.1'
@@ -91,7 +93,9 @@ for tid = 1:length(list_spike_type)
             [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_alpha, num_ratio));
 
             if useTF
-                dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
+%                 dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
+                load('..\template\1P_spike_tempolate.mat','filter_tempolate');
+                dFF = filter_tempolate;
                 dFF = dFF(dFF>exp(-1));
                 dFF = dFF'/sum(dFF);
                 kernel=fliplr(dFF);
@@ -173,6 +177,9 @@ for tid = 1:length(list_spike_type)
             %             fprintf('\nRecall=%f\nPrecision=%f\nF1=%f\nthred_ratio=%f\n',recall, precision, F1,thred_ratio);
             %         end
             %%
+            if ~exist(spike_type)
+                mkdir(spike_type);
+            end
             save(sprintf('%s\\scores_split_%s_%sVideo%s%s%s%s_%sSigma%s.mat',...
                 spike_type,method,video,part1,part2,part3,addon,sigma_from,baseline_std),...
                 'list_recall','list_precision','list_F1','list_thred_ratio','list_alpha');

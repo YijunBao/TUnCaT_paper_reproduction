@@ -3,7 +3,7 @@ clear;
 % addpath(genpath('C:\Matlab Files\Filter'));
 %%
 list_baseline_std = {'_ksd-psd'}; % '', 
-list_spike_type = {'only_BGSubs'}; % 
+list_spike_type = {'ABO'}; % 
 % list_spike_type = {'include','only','exclude'}; % 
 % list_spike_type = cellfun(@(x) [x,'_noBGSubs'], list_spike_type, 'UniformOutput',false);
 % spike_type = 'exclude'; % {'include','exclude','only'};
@@ -14,12 +14,14 @@ list_video={'Raw','SNR'};
 % video='Raw'; % {'Raw','SNR'}
 addon = '';
 % list_ndiag={'diag1', 'diag11', 'diag', 'diag02', 'diag22'}; % 
-list_ndiag = {'_p1','_p2'}; %, '_diag11'
+list_ndiag = {'_p1'}; %, '_diag11'
 % list_ndiag = {'+1-3', '+3-0', '+3-1'}; %'diag01', 
 % list_ndiag = {'_l1=1.0','_l1=0.0', '_l1=0.2','_l1=0.8'}; %,'_l1=0.8'
 
-dir_label = 'C:\Matlab Files\TemporalLabelingGUI-master';
-dir_video='D:\ABO\20 percent 200';
+% dir_label = 'C:\Matlab Files\TemporalLabelingGUI-master';
+% dir_video='D:\ABO\20 percent 200';
+dir_video = '..\data\ABO';
+dir_label = [dir_video,'\GT transients'];
 list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
              '510214538';'524691284';'527048992';'531006860';'539670003'};
 % list_Exp_ID = list_Exp_ID([2,3]);
@@ -69,7 +71,9 @@ for tid = 1:length(list_spike_type)
         [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_ratio));
 
         if useTF
-            dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
+%             dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
+            load('..\template\GCaMP6f_spike_tempolate_mean.mat','filter_tempolate');
+            dFF = filter_tempolate;
             dFF = dFF(dFF>exp(-1));
             dFF = dFF'/sum(dFF);
             kernel=fliplr(dFF);
@@ -148,6 +152,9 @@ for tid = 1:length(list_spike_type)
         %             fprintf('\nRecall=%f\nPrecision=%f\nF1=%f\nthred_ratio=%f\n',recall, precision, F1,thred_ratio);
         %         end
         %%
+        if ~exist(spike_type)
+            mkdir(spike_type);
+        end
         save(sprintf('%s\\scores_split_%s_%sVideo%s%s_%s%s.mat',spike_type,method,video,addon,ndiag,sigma_from,baseline_std),...
             'list_recall','list_precision','list_F1','list_thred_ratio');
         mean_F1 = squeeze(mean(list_F1,1));

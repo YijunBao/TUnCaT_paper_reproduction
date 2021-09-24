@@ -6,26 +6,25 @@ list_prot = {'GCaMP6f'}; % 'jGCaMP7c','jGCaMP7b','jGCaMP7f','jGCaMP7s'
 % list_prot = {'jGCaMP7c','jGCaMP7b','jGCaMP7f','jGCaMP7s'}; % 'jGCaMP7c','jGCaMP7b','jGCaMP7f','jGCaMP7s'
 for pid = 1:length(list_prot) % [2,4,8,16,32,64] % 
     prot = list_prot{pid};
-% for fs = 30 % [3, 10, 100, 300] % 
+for fs = 30 % [3, 10, 100, 300] % 
 % for T = [30, 50, 320, 1020] % 1100 % 
 % for N = [50, 100, 300, 400] % 
 % for power = [10, 20, 30, 50, 70, 150] % [1, 3, 100] % 
-for noise = [0, 0.1, 0.3] % [3, 10, 30, 50, 100] % 
-%     if number == 30 && nbin == 16
-%         continue;
+% for noise = [3, 10, 30, 50, 100] % 
 if contains(prot,'6')
-    fs = 30; % [90,300] % 3,10,
-%     simu_opt = sprintf('120s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_%s',fs,prot); % 
+%     fs = 30; % [90,300] % 3,10,
+    simu_opt = sprintf('120s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_%s',fs,prot); % 
 %     simu_opt = sprintf('%ds_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_%s',T,prot); % 
 %     simu_opt = sprintf('120s_30Hz_N=%d_100mW_noise10+23_NA0.8,0.6_%s',N,prot); % 
 %     simu_opt = sprintf('120s_30Hz_N=200_%dmW_noise10+23_NA0.8,0.6_%s',power,prot); % 
-    simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23x%s_NA0.8,0.6_%s',num2str(noise),prot); % 
+%     simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23x%s_NA0.8,0.6_%s',num2str(noise),prot); % 
 else
     fs = 3;
     simu_opt = sprintf('1100s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_%s',fs,prot); %
 end
 % simu_opt = '900s_30Hz_100+10\'; %_100+100
-dir_video=['F:\NAOMi\',simu_opt]; % _hasStart
+% dir_video=['F:\NAOMi\',simu_opt]; % _hasStart
+dir_video = '..\data\NAOMi';
 % list_alpha = [0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30]; %
 list_Exp_ID=arrayfun(@(x) ['Video_',num2str(x)], 0:9, 'UniformOutput', false);
 % list_thred_ratio=1:0.5:6; % 6:16; % 1:6; % 0.3:0.3:3; % 
@@ -49,21 +48,21 @@ end
 
 list_spike_type = {'NAOMi'}; % {'exclude','only','include'};
 % spike_type = 'exclude'; % {'include','exclude','only'};
-list_sigma_from = {'pure','sum'}; % {'pure'}; % 
+list_sigma_from = {'sum'}; % {'pure'}; % 
 % video='Raw'; % {'Raw','SNR'}
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 
 method = 'CNMF'; % {'FISSA','ours','CNMF'}
 % addon = '_DivideSigma';
 % list_ndiag={'diag1', 'diag11', 'diag', 'diag02', 'diag22'}; % 
-list_ndiag = {'_p1','_p2'}; % 
+list_ndiag = {'_p1'}; % 
 % list_ndiag = {'_l1=0.0','_l1=0.2','_l1=0.8','_l1=1.0'}; 
 % list_ndiag = {'_l1=1.0','_l1=0.0', '_l1=0.2','_l1=0.8'}; %,'_l1=0.8'
 % list_vsub={''}; % ,'v2'
 vsub=''; % ,'v2'
 % vsub='_diag11_v1'; % ,'v2'
 
-load(['filter_template 100Hz ',prot,'_ind_con=10.mat'],'template'); % _ind_con=10
+load(['..\template\filter_template 100Hz ',prot,'_ind_con=10.mat'],'template'); % _ind_con=10
 fs_template = 100;
 % load('filter_template 30Hz jGCaMP7s.mat','template');
 % fs_template = 30;
@@ -113,6 +112,9 @@ end
 %%
 for tid = 1:length(list_spike_type)
     spike_type = list_spike_type{tid}; % 
+    if ~exist(spike_type)
+        mkdir(spike_type);
+    end
     for ind_ndiag = 1:length(list_ndiag)
         ndiag = list_ndiag{ind_ndiag};
     for inds = 1:length(list_sigma_from)
@@ -188,7 +190,6 @@ for tid = 1:length(list_spike_type)
                 ncells_remain = size(traces_pure,1);
                 if ncells_remain < ncells
                     num_miss = ncells - size(traces_pure,1);
-                    addpath(genpath('C:\Matlab Files\neuron_post'));
                     GTMasks_2_permute = reshape(permute(FinalMasks,[2,1,3]),[],ncells);
                     load(fullfile(dir_FISSA,[Exp_ID,'.mat']),'A_thr');
                     if size(A_thr,2) ~= size(C_gt,1)

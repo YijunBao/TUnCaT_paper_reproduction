@@ -2,25 +2,27 @@ clear;
 % addpath(genpath('C:\Matlab Files\Unmixing'));
 % addpath(genpath('C:\Matlab Files\Filter'));
 %%
-dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_label = [dir_video,'split\'];
+dir_video = '..\data\ABO';
+dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
     'c25_123_348','c27_122_121','c28_163_244'};
 % list_Exp_ID = list_Exp_ID(1:5);
 list_spike_type = {'1p'}; % {'only','include','exclude'};
 % spike_type = 'exclude'; % {'include','exclude','only'};
-list_sigma_from = {'pure','sum'}; % {'pure','sum'}; 
+list_sigma_from = {'sum'}; % {'pure','sum'}; 
 
 method = 'CNMF'; % {'FISSA','ours','CNMF'}
 list_video={'Raw','SNR'};
 % video='Raw'; % {'Raw','SNR'}
-addon = '_merge';
+addon = '';
 % list_ndiag={'diag1', 'diag11', 'diag', 'diag02', 'diag22'}; % 
-list_ndiag = {'_p1','_p2'}; %, '_diag11'
+list_ndiag = {'_p1'}; %, '_diag11'
 % list_ndiag = {'+1-3', '+3-0', '+3-1'}; %'diag01', 
 % list_ndiag = {'_l1=1.0','_l1=0.0', '_l1=0.2','_l1=0.8'}; %,'_l1=0.8'
 list_baseline_std = {'_ksd-psd'}; % '', 
-dir_label = [dir_video,'split\'];
 num_Exp=length(list_Exp_ID);
 
 
@@ -42,6 +44,9 @@ end
 %%
 for tid = 1:length(list_spike_type)
     spike_type = list_spike_type{tid}; % 
+    if ~exist(spike_type)
+        mkdir(spike_type);
+    end
     for ind_ndiag = 1:length(list_ndiag)
         ndiag = list_ndiag{ind_ndiag};
     for inds = 1:length(list_sigma_from)
@@ -67,7 +72,9 @@ for tid = 1:length(list_spike_type)
         [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_ratio));
 
         if useTF
-            dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
+%             dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
+            load('..\template\1P_spike_tempolate.mat','filter_tempolate');
+            dFF = filter_tempolate;
             dFF = dFF(dFF>exp(-1));
             dFF = dFF'/sum(dFF);
             kernel=fliplr(dFF);
@@ -102,7 +109,6 @@ for tid = 1:length(list_spike_type)
             ncells_remain = size(traces_pure,1);
             if ncells_remain < ncells
                 num_miss = ncells - size(traces_pure,1);
-                addpath(genpath('C:\Matlab Files\neuron_post'));
                 load([dir_video,'\GT Masks merge\FinalMasks_',Exp_ID,'.mat'],'FinalMasks')
                 GTMasks_2_permute = reshape(permute(FinalMasks,[2,1,3]),[],ncells);
                 load(fullfile(dir_FISSA,[Exp_ID,'.mat']),'A_thr');

@@ -3,7 +3,10 @@ clear;
 % addpath(genpath('C:\Matlab Files\Filter'));
 
 %% choose video file
-dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_label = [dir_video,'split\'];
+dir_video = '..\data\ABO';
+dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
     'c25_123_348','c27_122_121','c28_163_244'};
@@ -14,12 +17,13 @@ sigma_from = 'Raw'; % {'Raw','Unmix'};
 % video='Raw'; % {'Raw','SNR'}
 list_video= {'Raw','SNR'};
 list_baseline_std = {'_ksd-psd'}; % '', 
-addon = '_merge'; % '_eps=0.1'; % 
-dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
+addon = ''; % '_eps=0.1'; % 
+% dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
+load('..\template\1P_spike_tempolate.mat','filter_tempolate');
+dFF = filter_tempolate;
 dFF = dFF(dFF>exp(-1));
 dFF = dFF'/sum(dFF);
 method = 'ours';
-dir_label = [dir_video,'split\'];
 num_Exp=length(list_Exp_ID);
 
 
@@ -115,6 +119,9 @@ for tid = 1:length(list_spike_type)
         end
         fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
         %%
+        if ~exist(spike_type)
+            mkdir(spike_type);
+        end
         save(sprintf('%s\\scores_split_bgsubs_%sVideo%s.mat',spike_type,video,baseline_std),...
             'list_recall','list_precision','list_F1','list_thred_ratio');
         mean_F1 = squeeze(mean(list_F1,1));

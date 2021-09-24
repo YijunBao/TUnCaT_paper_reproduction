@@ -6,20 +6,18 @@ list_prot = {'GCaMP6f'}; % 'jGCaMP7c','jGCaMP7b','jGCaMP7f','jGCaMP7s'
 % list_prot = {'GCaMP6s','jGCaMP7c','jGCaMP7b','jGCaMP7f','jGCaMP7s'}; % 'jGCaMP7c','jGCaMP7b','jGCaMP7f','jGCaMP7s'
 for pid = 1:length(list_prot) % [2,4,8,16,32,64] % 
     prot = list_prot{pid};
-% for fs = 30 % [3, 10, 100, 300] % 
+for fs = 30 % [3, 10, 100, 300] % 
 % for T = [30, 50, 320, 1020] % 1100 % 
 % for N = [50, 100, 300, 400] % 
 % for power = [10, 20, 30, 50, 70, 150] % [1, 3, 100] % 
-for noise = [0, 0.1, 0.3] % [3, 10, 30, 50, 100] % 
-%     if number == 30 && nbin == 16
-%         continue;
+% for noise = [3, 10, 30, 50, 100] % 
 if contains(prot,'6')
-    fs = 30; % [90,300] % 3,10,
-%     simu_opt = sprintf('120s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_%s',fs,prot); % 
+%     fs = 30; % [90,300] % 3,10,
+    simu_opt = sprintf('120s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_%s',fs,prot); % 
 %     simu_opt = sprintf('%ds_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_%s',T,prot); % 
 %     simu_opt = sprintf('120s_30Hz_N=%d_100mW_noise10+23_NA0.8,0.6_%s',N,prot); % 
 %     simu_opt = sprintf('120s_30Hz_N=200_%dmW_noise10+23_NA0.8,0.6_%s',power,prot); % 
-    simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23x%s_NA0.8,0.6_%s',num2str(noise),prot); % 
+%     simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23x%s_NA0.8,0.6_%s',num2str(noise),prot); % 
 else
     fs = 3;
     simu_opt = sprintf('1100s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_%s',fs,prot); %
@@ -27,7 +25,8 @@ end
 
 % simu_opt = sprintf('100s_%dHz_100+10_old',fs); %_100+100
 % simu_opt = '900s_30Hz_100+10\'; %_100+100
-dir_video=['F:\NAOMi\',simu_opt,'\']; % _hasStart
+% dir_video=['F:\NAOMi\',simu_opt,'\']; % _hasStart
+dir_video = '..\data\NAOMi';
 % list_alpha = [0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30]; %
 list_Exp_ID=arrayfun(@(x) ['Video_',num2str(x)], 0:9, 'UniformOutput', false);
 % list_thred_ratio=1:0.5:6; % 6:16; % 1:6; % 0.3:0.3:3; % 
@@ -66,7 +65,7 @@ list_ndiag = {''};
 vsub=''; % ,'v2'
 % vsub='_diag11_v1'; % ,'v2'
 
-load(['filter_template 100Hz ',prot,'_ind_con=10.mat'],'template'); % _ind_con=10
+load(['..\template\filter_template 100Hz ',prot,'_ind_con=10.mat'],'template'); % _ind_con=10
 fs_template = 100;
 % load('filter_template 30Hz jGCaMP7s.mat','template');
 % fs_template = 30;
@@ -305,8 +304,11 @@ for tid = 1:length(list_spike_type)
                 disp('Increase thred_ratio');
             end
             
+            if ~exist(spike_type)
+                mkdir(spike_type);
+            end
 %             list_corr_unmix_mean = [cellfun(@mean, list_corr_raw),cellfun(@mean, list_corr_unmix)];
-            save(sprintf('NAOMi\\scores_split_%s_%s_%sVideo_%s_compSigma%s%s.mat',method,simu_opt,video,sigma_from,addon,baseline_std),...
+            save(sprintf('NAOMi\\scores_split_%s_%s_%sVideo_%s_Sigma%s%s.mat',method,simu_opt,video,sigma_from,addon,baseline_std),...
                 'list_recall','list_precision','list_F1','list_thred_ratio','list_alpha',...
                 'list_corr_unmix','list_MSE_all','list_MSE_rmmean','list_MSE_rmmedian','list_pct_min',...
                 'list_corr_unmix_active','list_corr_unmix_inactive');
