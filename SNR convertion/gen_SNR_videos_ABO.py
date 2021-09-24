@@ -12,7 +12,8 @@ from preprocessing_functions import preprocess_video
 if __name__ == '__main__':
     # folder of the raw videos
     # rate_hz = 30 # frame rate of the video
-    dir_video = 'D:\\ABO\\20 percent 200\\'
+    # dir_video = 'D:\\ABO\\20 percent 200\\'
+    dir_video = '..\\data\\ABO\\'
     # file names of the ".h5" files storing the raw videos. 
     list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
         '510214538','524691284','527048992','531006860','539670003']

@@ -4,8 +4,9 @@ import os
 import numpy as np
 import time
 import h5py
-
 from scipy.io import savemat, loadmat
+
+sys.path.insert(0, 'C:\\Other methods\\AllenSDK-master') # The folder containing the Allen SDK code
 # from r_neuropil import estimate_contamination_ratios
 # from roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
 # from demixer import demix_time_dep_masks
@@ -27,14 +28,15 @@ if __name__ == '__main__':
     Table_time = np.zeros((len(list_Exp_ID),3))
     video_type = sys.argv[1] # 'SNR' # 'Raw' # 
 
-    dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    dir_video = '..\\data\\1p\\'
     if video_type == 'SNR':
         varname = 'network_input' # 
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:
         varname = 'mov' # 
         dir_video_SNR = dir_video
-    dir_masks = os.path.join(dir_video, 'GT Masks merge')
+    dir_masks = os.path.join(dir_video, 'GT Masks')
     dir_traces = os.path.join(dir_video, 'traces_AllenSDK_'+video_type+'_merge_test')
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 

@@ -17,7 +17,8 @@ if __name__ == '__main__':
     list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
-    dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
+    # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
+    dir_video = '..\\data\\NAOMi\\'
 
     Qclip = 0
     nbin = int(sys.argv[2]) # 1 # 

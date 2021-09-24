@@ -22,7 +22,8 @@ if __name__ == '__main__':
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
 
-    dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
+    # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
+    dir_video = '..\\data\\NAOMi\\'
     if video_type == 'SNR':
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:

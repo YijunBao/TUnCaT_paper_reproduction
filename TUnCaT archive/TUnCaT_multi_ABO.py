@@ -17,7 +17,8 @@ if __name__ == '__main__':
     list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
         '510214538','524691284','527048992','531006860','539670003']
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
-    dir_video = 'D:\\ABO\\20 percent 200' 
+    # dir_video = 'D:\\ABO\\20 percent 200' 
+    dir_video = '..\\data\\ABO\\'
 
     Qclip = 0
     nbin = int(sys.argv[2]) # 1 # 

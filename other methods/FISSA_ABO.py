@@ -23,7 +23,8 @@ if __name__ == '__main__':
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
 
-    dir_video = 'D:\\ABO\\20 percent 200' 
+    # dir_video = 'D:\\ABO\\20 percent 200' 
+    dir_video = '..\\data\\ABO\\'
     if video_type == 'SNR':
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:

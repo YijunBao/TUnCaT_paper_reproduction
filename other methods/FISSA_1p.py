@@ -17,7 +17,8 @@ np.seterr(divide='ignore',invalid='ignore')
 # %%
 if __name__ == '__main__':
     list_alpha = [0.001, 0.002, 0.003, 0.005, 0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1]  # 
-    dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    dir_video = '..\\data\\1p\\'
     list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
                 'c25_163_267','c27_114_176','c28_161_149',
                 'c25_123_348','c27_122_121','c28_163_244']
@@ -28,7 +29,7 @@ if __name__ == '__main__':
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:
         dir_video_SNR = dir_video
-    dir_masks = os.path.join(dir_video, 'GT Masks merge')
+    dir_masks = os.path.join(dir_video, 'GT Masks')
     dir_traces = os.path.join(dir_video, 'traces_FISSA_'+video_type+'_merge')
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 

@@ -44,13 +44,15 @@ try:
 except NameError:
     print('Not launched under iPython')
 
+import sys
+sys.path.insert(0, 'C:\\Other methods\\CaImAn') # The folder containing the caiman code
+
 import caiman as cm
 import numpy as np
 import os
 import time
 import pylab as pl
 import psutil
-import sys
 from ipyparallel import Client
 from skimage.external.tifffile import TiffFile
 import scipy
@@ -79,8 +81,8 @@ import cv2
 if __name__ == "__main__":
     start = time.time()
     #%% GT 
-    extn = '.mmap'
-    dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    dir_video = '..\\data\\1p\\'
     list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
                 'c25_163_267','c27_114_176','c28_161_149',
                 'c25_123_348','c27_122_121','c28_163_244']
@@ -94,7 +96,7 @@ if __name__ == "__main__":
     else:
         varname = 'mov' # 
         dir_video_SNR = dir_video
-    dir_masks = os.path.join(dir_video, 'GT Masks merge')
+    dir_masks = os.path.join(dir_video, 'GT Masks')
     dir_traces = os.path.join(dir_video, 'traces_CNMF_'+video_type+'_p'+str(p)+'_merge')
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 

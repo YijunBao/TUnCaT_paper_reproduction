@@ -1,9 +1,14 @@
 results/*
-data/*
+data
+data/ABO/*.h5
 *.asv
 *.dat
-TUnCaT archive/unmixed_traces/*
+*.mmap
+TUnCaT archive/data/unmixed_traces
 TUnCaT archive/demo_*ABO.py
+*/wisdom
+.vscode
+*vscode*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

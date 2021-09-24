@@ -13,7 +13,8 @@ if __name__ == '__main__':
     # folder of the raw videos
     folder = '120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f' # sys.argv[1]
     rate_hz = int(folder.split('_')[1][:-2]) # 30 # frame rate of the video
-    dir_video = 'F:\\NAOMi\\{}\\'.format(folder)
+    # dir_video = 'F:\\NAOMi\\{}\\'.format(folder)
+    dir_video = '..\\data\\NAOMi\\'
     # file names of the ".h5" files storing the raw videos. 
     list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
     sub_folder = ''

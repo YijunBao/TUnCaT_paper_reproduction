@@ -25,7 +25,7 @@ The one-photon videos were recorded in our lab. We stored the videos in `data/1p
 
 
 ## Generating SNR videos (Python)
-In addition to unmix the traces from raw videos, we also unmixed the traces for SNR videos. We used the code in the folder `SNR convertion` to convert all the raw videos to SNR videos. Required packages: numpy, scipy, h5py, numba, pyfftw, cpuinfo, opencv. Follow `bat_SNR.bat` to run the code. The template used in temporal filtering are stored in the folder `template`. 
+In addition to unmix the traces from raw videos, we also unmixed the traces for SNR videos. We used the code in the folder `SNR convertion` to convert all the raw videos to SNR videos. Required packages: (existing) numpy, scipy, h5py, numba, (additional) pyfftw, cpuinfo, opencv. Follow `bat_SNR.bat` to run the code. The template used in temporal filtering are stored in the folder `template`. 
 
 
 # Manually label GT transients (MATLAB)

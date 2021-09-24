@@ -12,7 +12,8 @@ from preprocessing_functions import preprocess_video
 if __name__ == '__main__':
     # folder of the raw videos
     # rate_hz = 20 # frame rate of the video
-    dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    dir_video = '..\\data\\1p\\'
     # file names of the ".h5" files storing the raw videos. 
     list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
                 'c25_163_267','c27_114_176','c28_161_149',

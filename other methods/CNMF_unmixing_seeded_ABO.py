@@ -44,13 +44,15 @@ try:
 except NameError:
     print('Not launched under iPython')
 
+import sys
+sys.path.insert(0, 'C:\\Other methods\\CaImAn') # The folder containing the caiman code
+
 import caiman as cm
 import numpy as np
 import os
 import time
 import pylab as pl
 import psutil
-import sys
 from ipyparallel import Client
 from skimage.external.tifffile import TiffFile
 import scipy
@@ -79,8 +81,8 @@ import cv2
 if __name__ == "__main__":
     start = time.time()
     #%% GT 
-    extn = '.mmap'
-    dir_video = 'D:\\ABO\\20 percent 200\\'
+    # dir_video = 'D:\\ABO\\20 percent 200\\'
+    dir_video = '..\\data\\ABO\\'
     list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
         '510214538','524691284','527048992','531006860','539670003']
     Table_time = np.zeros(len(list_Exp_ID))
