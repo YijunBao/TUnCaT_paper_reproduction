@@ -6,13 +6,14 @@ import time
 import h5py
 from scipy.io import savemat, loadmat
 
-sys.path.insert(0, 'C:\\Other methods\\AllenSDK-master') # The folder containing the Allen SDK code
-# from r_neuropil import estimate_contamination_ratios
-# from roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
-# from demixer import demix_time_dep_masks
-from allensdk.brain_observatory.r_neuropil import estimate_contamination_ratios
-from allensdk.brain_observatory.roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
-from allensdk.brain_observatory.demixer import demix_time_dep_masks
+sys.path.insert(0, 'C:\\Matlab Files\\Unmixing') # The folder containing the Allen SDK code
+from r_neuropil import estimate_contamination_ratios
+from roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
+from demixer import demix_time_dep_masks
+# sys.path.insert(0, 'C:\\Matlab Files\\AllenSDK-master') # The folder containing the Allen SDK code
+# from allensdk.brain_observatory.r_neuropil import estimate_contamination_ratios
+# from allensdk.brain_observatory.roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
+# from allensdk.brain_observatory.demixer import demix_time_dep_masks
 
 from sklearn.exceptions import ConvergenceWarning
 import warnings
@@ -25,7 +26,7 @@ if __name__ == '__main__':
     list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
                 'c25_163_267','c27_114_176','c28_161_149',
                 'c25_123_348','c27_122_121','c28_163_244']
-    Table_time = np.zeros((len(list_Exp_ID),3))
+    Table_time = np.zeros((len(list_Exp_ID)))
     video_type = sys.argv[1] # 'SNR' # 'Raw' # 
 
     # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
@@ -37,7 +38,7 @@ if __name__ == '__main__':
         varname = 'mov' # 
         dir_video_SNR = dir_video
     dir_masks = os.path.join(dir_video, 'GT Masks')
-    dir_traces = os.path.join(dir_video, 'traces_AllenSDK_'+video_type+'_merge_test')
+    dir_traces = os.path.join(dir_video, 'traces_AllenSDK_'+video_type)
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 
     border = [0,0,0,0]
@@ -87,9 +88,7 @@ if __name__ == '__main__':
         finish = time.time()
         print('neuropil subtraction time: {} s'.format(finish - finish_demix))
         
-        Table_time[ind_Exp,0] = finish_trace-start
-        Table_time[ind_Exp,1] = finish_demix-finish_trace
-        Table_time[ind_Exp,2] = finish-finish_demix
+        Table_time[ind_Exp] = finish-start
         savemat(os.path.join(dir_traces, Exp_ID+".mat"), {"compensated_traces": compensated_traces, \
             "r":r, "roi_traces":roi_traces, "unmixed_traces": unmixed_traces, "neuropil_traces": neuropil_traces})
 

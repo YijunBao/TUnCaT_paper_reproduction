@@ -4,7 +4,9 @@ clear;
 %%
 % dir_video='E:\OnePhoton videos\cropped videos\';
 % dir_label = [dir_video,'split\'];
-dir_video = '..\data\ABO';
+dir_video = '..\data\1p';
+dir_traces='..\results\1p\unmixed traces\';
+% dir_traces=dir_video;
 dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
@@ -66,7 +68,7 @@ for tid = 1:length(list_spike_type)
 %         folder = sprintf('traces_ours_%s (tol=1e-4, max_iter=%d)',lower(video),max_iter);
         folder = sprintf('traces_%s_%s%s%s',method,video,ndiag,addon);
 %         folder = sprintf('traces_ours');
-        dir_FISSA = fullfile(dir_video,folder);
+        dir_FISSA = fullfile(dir_traces,folder);
         useTF = strcmp(video, 'Raw');
 
         [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_ratio));
@@ -74,7 +76,7 @@ for tid = 1:length(list_spike_type)
         if useTF
 %             dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
             load('..\template\1P_spike_tempolate.mat','filter_tempolate');
-            dFF = filter_tempolate;
+            dFF = squeeze(filter_tempolate)';
             dFF = dFF(dFF>exp(-1));
             dFF = dFF'/sum(dFF);
             kernel=fliplr(dFF);
@@ -109,7 +111,7 @@ for tid = 1:length(list_spike_type)
             ncells_remain = size(traces_pure,1);
             if ncells_remain < ncells
                 num_miss = ncells - size(traces_pure,1);
-                load([dir_video,'\GT Masks merge\FinalMasks_',Exp_ID,'.mat'],'FinalMasks')
+                load([dir_video,'\GT Masks\FinalMasks_',Exp_ID,'.mat'],'FinalMasks')
                 GTMasks_2_permute = reshape(permute(FinalMasks,[2,1,3]),[],ncells);
                 load(fullfile(dir_FISSA,[Exp_ID,'.mat']),'A_thr');
                 if size(A_thr,2) ~= size(C_gt,1)

@@ -1,7 +1,12 @@
 %% ABO F1 vs alpha for fixed and floating alpha
 spike_type = 'ABO'; % {'include','exclude','only'};
 num_Exp = 10;
-list_addon = {'_novideounmix_r2_mixout1000','_novideounmix_r2_fixed_alpha'};
+list_addon = {'_1000','_fixed_alpha'}; % 
+dir_video='..\data\ABO\';
+% dir_traces=dir_video;
+% dir_scores='..\evaluation\ABO\';
+dir_traces='..\results\ABO\unmixed traces\';
+dir_scores='..\results\ABO\evaluation\';
 
 list_video = {'SNR','Raw'}; % {'SNR','Raw'}; % 
 num_video = length(list_video);
@@ -23,7 +28,7 @@ for vid = 1:num_video
         else
             scorefile = ['scores_split_ours_',video,'Video',addon,'_UnmixSigma',baseline_std,'.mat'];
         end
-        load(fullfile(spike_type,scorefile));
+        load(fullfile(dir_scores,scorefile));
         num_alpha = length(list_alpha);
         [n1,n2,n3] = size(list_F1);
         [recall_CV, precision_CV, F1_CV, thred_ratio_CV] = deal(zeros(num_Exp,num_alpha));
@@ -47,6 +52,25 @@ for vid = 1:num_video
     end
 end
 
-save([spike_type,'\F1_split_fix_float_alpha',baseline_std,'.mat'],...
+save([dir_scores,'\F1_split_fix_float_alpha',baseline_std,'.mat'],...
     'list_video','list_addon','Table_thred_ratio_CV','Table_list_alpha',...
     'Table_recall_CV','Table_precision_CV','Table_F1_CV');
+
+
+%% Save processing time with different alpha 
+[list_alpha_all, Table_time_all] = deal(cell(num_addon, num_video));
+load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+Table_time_SNR = Table_time';
+for vid = 1:num_video
+    video = list_video{vid};
+    for aid = 1:num_addon
+        addon = list_addon{aid};
+        load([dir_traces,'traces_ours_',video,addon,'\Table_time.mat'],'list_alpha','Table_time')
+        if contains(video,'SNR')
+            Table_time(:,end) = Table_time(:,end) + Table_time_SNR;
+        end
+        list_alpha_all{aid,vid} = list_alpha;
+        Table_time_all{aid,vid} = Table_time;
+    end
+end
+save([dir_scores,'Time_alpha_ABO.mat'],'list_alpha_all','Table_time_all','list_video','list_addon');

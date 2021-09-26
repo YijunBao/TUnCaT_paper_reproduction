@@ -3,8 +3,12 @@ clear;
 % addpath(genpath('C:\Matlab Files\Unmixing'));
 % addpath(genpath('C:\Matlab Files\Filter'));
 % %%
-% dir_video='D:\ABO\20 percent 200\';
-dir_video = '..\data\ABO\';
+spike_type = 'ABO'; % dir_video='D:\ABO\20 percent 200\';
+dir_video = ['..\data\',spike_type,'\'];
+% dir_traces=dir_video;
+% dir_scores=['..\evaluation\',spike_type,'\'];
+dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+dir_scores=['..\results\',spike_type,'\evaluation\'];
 % list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
 %              '510214538';'524691284';'527048992';'531006860';'539670003'};
 
@@ -15,14 +19,14 @@ list_method = {'BG subtraction'; 'FISSA'; 'Our unmixing'; 'CNMF'; 'AllenSDK'}; %
 num_method = length(list_method);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
-addon = '_novideounmix_r2_mixout'; % '_eps=0.1'; % _downsample100 
+addon = ''; % '_eps=0.1'; % _downsample100 
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 
 % %%
 [list_recall_all,list_precision_all,list_F1_all,list_alpha_all,list_thred_ratio_all,...
     list_alpha_all_time,Table_time_all] = deal(cell(num_method,num_video));
 for tid = 1:length(list_spike_type)
-    spike_type = list_spike_type{tid}; % 
+%     spike_type = list_spike_type{tid}; % 
 for vid = 1:num_video
     video = list_video{vid};
 %     list_scorefile = {['scores_split_bgsubs_',video,'Video',baseline_std,'.mat'],... 
@@ -37,7 +41,7 @@ for vid = 1:num_video
 %         ['scores_',video,'Video_traces_ours_',video,'_sigma1_diag11_v1_RawSigma',baseline_std,'.mat'],...
 %     list_scorefile{1}=list_scorefile{3};
 %     list_tracefile = {['traces_ours_',video],... % ,['traces_ours_',video,'_nooverlap'],[]
-    list_tracefile = {['traces_ours_',video,'_bgsubs'],... % ,['traces_ours_',video,'_nooverlap'],[]
+    list_tracefile = {['traces_ours_',video,''],... % ,['traces_ours_',video,'_nooverlap'],[]
         ['traces_FISSA_',video,''],...
         ['traces_ours_',video,addon],...
         ['traces_CNMF_',video,'_p1']...
@@ -54,18 +58,21 @@ for vid = 1:num_video
 
     for mid = 1:length(list_method)
         method = list_method(mid);
-        dir_FISSA = fullfile(dir_video,list_tracefile{mid});
+        dir_FISSA = fullfile(dir_traces,list_tracefile{mid});
         load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
+        if size(Table_time,1)==1
+            Table_time=Table_time';
+        end
         if mid == 1
             Table_time_all{mid,vid} = Table_time(:,end)+Table_time_SNR;
         else
-            Table_time_all{mid,vid} = squeeze(Table_time)+Table_time_SNR;
+            Table_time_all{mid,vid} = Table_time+Table_time_SNR;
         end
         if any(mid == [2,3])
             list_alpha_all_time{mid,vid} = list_alpha;
         end
         
-        load(fullfile('.\',spike_type,list_scorefile{mid}));
+        load(fullfile(dir_scores,list_scorefile{mid}));
         list_recall_all{mid,vid} = list_recall;
         list_precision_all{mid,vid} = list_precision;
         list_F1_all{mid,vid} = list_F1;
@@ -75,7 +82,7 @@ for vid = 1:num_video
         end
     end
 end
-save(sprintf('%s\\timing_all_methods_split %s%s x5.mat',spike_type,addon,baseline_std),...
+save(sprintf('%s\\timing_all_methods_split %s%s x5.mat',dir_scores,addon,baseline_std),...
     'list_alpha_all_time','Table_time_all','list_method','list_video',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
 end
@@ -86,18 +93,22 @@ clear;
 % addpath(genpath('C:\Matlab Files\Filter'));
 % %%
 % dir_video='E:\OnePhoton videos\cropped videos\';
-dir_video = '..\data\1p\';
+spike_type = '1p'; % dir_video='D:\ABO\20 percent 200\';
+dir_video = ['..\data\',spike_type,'\'];
+% dir_traces=dir_video;
+% dir_scores=['..\evaluation\',spike_type,'\'];
+dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+dir_scores=['..\results\',spike_type,'\evaluation\'];
 % list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
 %     'c25_163_267','c27_114_176','c28_161_149',...
 %     'c25_123_348','c27_122_121','c28_163_244'};
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 
-spike_type = '1p'; % {'only','include','exclude'};
 list_method = {'BG subtraction'; 'FISSA'; 'Our unmixing'; 'CNMF'; 'AllenSDK'}; % 'Remove overlap'; 'Percent pixels'; 
 num_method = length(list_method);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
-addon = '_novideounmix_r2_mixout'; % '_pertmin=0.16_range2_merge'; % 
+addon = ''; % '_pertmin=0.16_range2_merge'; % 
 
 % %%
 [list_recall_all,list_precision_all,list_F1_all,list_alpha_all,list_thred_ratio_all,...
@@ -111,7 +122,7 @@ for vid = 1:num_video
         ,['scores_split_AllenSDK_',video,'Video_Unmix',baseline_std,'.mat']...
         }'; % ,...
 %     list_scorefile{1}=list_scorefile{3};
-    list_tracefile = {['traces_ours_',video,''],... % ,['traces_ours_',video,'_nooverlap'],[]
+    list_tracefile = {['traces_ours_',video,addon],... % ,['traces_ours_',video,'_nooverlap'],[]
         ['traces_FISSA_',video,''],...
         ['traces_ours_',video,addon],...
         ['traces_CNMF_',video,'_p1']...
@@ -127,18 +138,21 @@ for vid = 1:num_video
 
     for mid = 1:length(list_method)
         method = list_method(mid);
-        dir_FISSA = fullfile(dir_video,list_tracefile{mid});
+        dir_FISSA = fullfile(dir_traces,list_tracefile{mid});
         load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
+        if size(Table_time,1)==1
+            Table_time=Table_time';
+        end
         if mid == 1
             Table_time_all{mid,vid} = Table_time(:,end)+Table_time_SNR;
         else
-            Table_time_all{mid,vid} = squeeze(Table_time)+Table_time_SNR;
+            Table_time_all{mid,vid} = Table_time+Table_time_SNR;
         end
         if any(mid == [2,3])
             list_alpha_all_time{mid,vid} = list_alpha;
         end
         
-        load(fullfile('.\',spike_type,list_scorefile{mid}));
+        load(fullfile(dir_scores,list_scorefile{mid}));
         list_recall_all{mid,vid} = list_recall;
         list_precision_all{mid,vid} = list_precision;
         list_F1_all{mid,vid} = list_F1;
@@ -148,22 +162,26 @@ for vid = 1:num_video
         end
     end
 end
-save(sprintf('1p\\timing_all_methods_split %s%s x5.mat',addon,baseline_std),...
+save(sprintf('%s\\timing_all_methods_split %s%s x5.mat',dir_scores,addon,baseline_std),...
     'list_alpha_all_time','Table_time_all','list_method','list_video',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
 
 
 %% NAOMi
 clear;
-addon = '_novideounmix_r2_mixout'; % _mixout '_pertmin=0.16_eps=0.1_range'; %  
+addon = ''; % _mixout '_pertmin=0.16_eps=0.1_range'; %  
 % simu_opt = '300s_10Hz_N=100_40mW_noise10+23_NA0.4,0.3'; % _NA0.4,0.3
 % simu_opt = '1100s_3Hz_N=200_40mW_noise10+23_NA0.8,0.6_jGCaMP7c'; % 
 simu_opt = '120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f'; % 
 % dir_video=['F:\NAOMi\',simu_opt,'\'];
-dir_video = '..\data\ABO\';
+spike_type = 'NAOMi'; % dir_video='D:\ABO\20 percent 200\';
+dir_video = ['..\data\',spike_type,'\'];
+% dir_traces=dir_video;
+% dir_scores=['..\evaluation\',spike_type,'\'];
+dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+dir_scores=['..\results\',spike_type,'\evaluation\'];
 % list_Exp_ID=arrayfun(@(x) ['Video_',num2str(x)], 0:9, 'UniformOutput', false);
 
-spike_type = 'NAOMi'; % {'include','exclude','only'};
 list_method = {'BG subtraction'; 'FISSA'; 'Our unmixing'; 'CNMF'; 'AllenSDK'}; % 'Remove overlap'; 'Percent pixels'; ; 'AllenSDK'
 num_method = length(list_method);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
@@ -187,7 +205,7 @@ for vid = 1:num_video
         ['scores_split_AllenSDK_',simu_opt,'_',video,'Video_Unmix_Sigma',baseline_std,'.mat'],...
         }'; % ,...
 %     list_scorefile{1}=list_scorefile{3};
-    list_tracefile = {['traces_ours_',video,'_bgsubs'],... % ,['traces_ours_',video,'_nooverlap'],[]
+    list_tracefile = {['traces_ours_',video,addon],... % ,['traces_ours_',video,'_nooverlap'],[]
         ['traces_FISSA_',video,addon_FISSA],...
         ['traces_ours_',video,addon],...
         ['traces_CNMF_',video,'_p1']...
@@ -203,18 +221,21 @@ for vid = 1:num_video
 
     for mid = 1:length(list_method)
         method = list_method(mid);
-        dir_FISSA = fullfile(dir_video,list_tracefile{mid});
+        dir_FISSA = fullfile(dir_traces,list_tracefile{mid});
         load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
+        if size(Table_time,1)==1
+            Table_time=Table_time';
+        end
         if mid == 1
             Table_time_all{mid,vid} = Table_time(:,end)+Table_time_SNR;
         else
-            Table_time_all{mid,vid} = squeeze(Table_time)+Table_time_SNR;
+            Table_time_all{mid,vid} = Table_time+Table_time_SNR;
         end
         if any(mid == [2,3])
             list_alpha_all_time{mid,vid} = list_alpha;
         end
         
-        load(fullfile('.\',spike_type,list_scorefile{mid}));
+        load(fullfile(dir_scores,list_scorefile{mid}));
         list_recall_all{mid,vid} = list_recall;
         list_precision_all{mid,vid} = list_precision;
         list_F1_all{mid,vid} = list_F1;
@@ -227,7 +248,7 @@ for vid = 1:num_video
         end
     end
 end
-save(sprintf('NAOMi\\timing_%s_all_methods_split %s%s x5.mat',simu_opt,addon,baseline_std),...
+save(sprintf('%s\\timing_%s_all_methods_split %s%s x5.mat',dir_scores,simu_opt,addon,baseline_std),...
     'list_alpha_all_time','Table_time_all','list_method','list_video','list_corr_unmix_all',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all',...
     'list_thred_ratio_all'); % ,'list_corr_active_unmix_all','list_corr_inactive_unmix_all'
@@ -250,7 +271,7 @@ num_method = length(list_method);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
-addon = '_novideounmix_r2_mixout'; % '_pertmin=0.16_eps=0.1_range'; %  
+addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
 
 for vaid = 1:length(list_variable)
     variable = list_variable{vaid};
@@ -266,13 +287,15 @@ for vaid = 1:length(list_variable)
     % simu_opt = sprintf('120s_%dHz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f',param); % 
     % simu_opt = sprintf('120s_30Hz_N=%d_100mW_noise10+23_NA0.8,0.6_GCaMP6f',param); % 
     % simu_opt = sprintf('120s_30Hz_N=200_%dmW_noise10+23_NA0.8,0.6_GCaMP6f',param); % 
-    if param == 1
-        simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f'); % 
-    else
+    if contains(variable,'noise') && param ~= 1
         simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23x%s_NA0.8,0.6_GCaMP6f',num2str(param)); % 
+    else
+        simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f'); % 
     end
     % dir_video=['F:\NAOMi\',simu_opt,'\'];
-    dir_video = '..\data\NAOMi\';
+    dir_video = ['..\data\',spike_type,'\'];
+    dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+    dir_scores=['..\results\',spike_type,'\evaluation\'];
 
     % %%
     for vid = 1:num_video
@@ -284,7 +307,7 @@ for vaid = 1:length(list_variable)
             ['scores_split_AllenSDK_',simu_opt,'_',video,'Video_Unmix_Sigma',baseline_std,'.mat'],...
             }'; % ,...
     %     list_scorefile{1}=list_scorefile{3};
-        list_tracefile = {['traces_ours_',video,'_bgsubs'],... % ,['traces_ours_',video,'_nooverlap'],[]
+        list_tracefile = {['traces_ours_',video,addon],... % ,['traces_ours_',video,'_nooverlap'],[]
             ['traces_FISSA_',video,''],...
             ['traces_ours_',video,addon],...
             ['traces_CNMF_',video,'_p1']...
@@ -305,18 +328,21 @@ for vaid = 1:length(list_variable)
 
         for mid = 1:length(list_method)
             method = list_method(mid);
-            dir_FISSA = fullfile(dir_video,list_tracefile{mid});
+            dir_FISSA = fullfile(dir_traces,list_tracefile{mid});
             load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
-            if mid == 1
-                Table_time_all{mid,vid,pid} = Table_time(:,end)+Table_time_SNR;
-            else
-                Table_time_all{mid,vid,pid} = squeeze(Table_time)+Table_time_SNR;
-            end
+        if size(Table_time,1)==1
+            Table_time=Table_time';
+        end
+        if mid == 1
+            Table_time_all{mid,vid} = Table_time(:,end)+Table_time_SNR;
+        else
+            Table_time_all{mid,vid} = Table_time+Table_time_SNR;
+        end
             if any(mid == [2,3])
                 list_alpha_all_time{mid,vid,pid} = list_alpha;
             end
 
-            load(fullfile('.\',spike_type,list_scorefile{mid}));
+            load(fullfile(dir_scores,list_scorefile{mid}));
             list_recall_all{mid,vid,pid} = list_recall;
             list_precision_all{mid,vid,pid} = list_precision;
             list_F1_all{mid,vid,pid} = list_F1;
@@ -328,7 +354,7 @@ for vaid = 1:length(list_variable)
         end
     end
     end
-    save(sprintf('NAOMi\\timing_x5_%s_GCaMP6f_all_methods_split %s%s.mat',variable,addon,baseline_std),'list_N_neuron',...
+    save(sprintf('%s\\timing_x5_%s_GCaMP6f_all_methods_split %s%s.mat',dir_scores,variable,addon,baseline_std),'list_N_neuron',...
         'list_param','list_alpha_all_time','Table_time_all','list_method','list_video','list_corr_unmix_all',...
         'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
 end
@@ -346,7 +372,7 @@ num_method = length(list_method);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
-addon = '_novideounmix_r2_mixout'; % '_pertmin=0.16_eps=0.1_range'; %  
+addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
 
 [list_recall_all,list_precision_all,list_F1_all,list_alpha_all,list_thred_ratio_all,...
     list_corr_unmix_all,list_alpha_all_time,Table_time_all] = deal(cell(num_method,num_video,num_param));
@@ -360,7 +386,9 @@ else
     simu_opt = ['1100s_3Hz_N=200_100mW_noise10+23_NA0.8,0.6_',prot]; % 
 end
 % dir_video=['F:\NAOMi\',simu_opt,'\'];
-dir_video = '..\data\NAOMi\';
+dir_video = ['..\data\',spike_type,'\'];
+dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+dir_scores=['..\results\',spike_type,'\evaluation\'];
 
 % %%
 for vid = 1:num_video
@@ -372,7 +400,7 @@ for vid = 1:num_video
         ['scores_split_AllenSDK_',simu_opt,'_',video,'Video_Unmix_Sigma',baseline_std,'.mat'],...
         }'; % ,...
 %     list_scorefile{1}=list_scorefile{3};
-    list_tracefile = {['traces_ours_',video,'_bgsubs'],... % ,['traces_ours_',video,'_nooverlap'],[]
+    list_tracefile = {['traces_ours_',video,addon],... % ,['traces_ours_',video,'_nooverlap'],[]
         ['traces_FISSA_',video,''],...
         ['traces_ours_',video,addon],...
         ['traces_CNMF_',video,'_p1']...
@@ -393,18 +421,21 @@ for vid = 1:num_video
     
     for mid = 1:length(list_method)
         method = list_method(mid);
-        dir_FISSA = fullfile(dir_video,list_tracefile{mid});
+        dir_FISSA = fullfile(dir_traces,list_tracefile{mid});
         load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
+        if size(Table_time,1)==1
+            Table_time=Table_time';
+        end
         if mid == 1
-            Table_time_all{mid,vid,pid} = Table_time(:,end)+Table_time_SNR;
+            Table_time_all{mid,vid} = Table_time(:,end)+Table_time_SNR;
         else
-            Table_time_all{mid,vid,pid} = squeeze(Table_time)+Table_time_SNR;
+            Table_time_all{mid,vid} = Table_time+Table_time_SNR;
         end
         if any(mid == [2,3])
             list_alpha_all_time{mid,vid,pid} = list_alpha;
         end
         
-        load(fullfile('.\',spike_type,list_scorefile{mid}));
+        load(fullfile(dir_scores,list_scorefile{mid}));
         list_recall_all{mid,vid,pid} = list_recall;
         list_precision_all{mid,vid,pid} = list_precision;
         list_F1_all{mid,vid,pid} = list_F1;
@@ -416,7 +447,7 @@ for vid = 1:num_video
     end
 end
 end
-save(sprintf('NAOMi\\timing_x5_sensor_GCaMP6f_all_methods_split %s%s.mat',addon,baseline_std),'list_N_neuron',...
+save(sprintf('%s\\timing_x5_sensor_GCaMP6f_all_methods_split %s%s.mat',dir_scores,addon,baseline_std),'list_N_neuron',...
     'list_prot','list_alpha_all_time','Table_time_all','list_method','list_video','list_corr_unmix_all',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
 

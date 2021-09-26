@@ -6,13 +6,14 @@ import time
 import h5py
 from scipy.io import savemat, loadmat
 
-sys.path.insert(0, 'C:\\Other methods\\AllenSDK-master') # The folder containing the Allen SDK code
-# from r_neuropil import estimate_contamination_ratios
-# from roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
-# from demixer import demix_time_dep_masks
-from allensdk.brain_observatory.r_neuropil import estimate_contamination_ratios
-from allensdk.brain_observatory.roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
-from allensdk.brain_observatory.demixer import demix_time_dep_masks
+sys.path.insert(0, 'C:\\Matlab Files\\Unmixing') # The folder containing the Allen SDK code
+from r_neuropil import estimate_contamination_ratios
+from roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
+from demixer import demix_time_dep_masks
+# sys.path.insert(0, 'C:\\Matlab Files\\AllenSDK-master') # The folder containing the Allen SDK code
+# from allensdk.brain_observatory.r_neuropil import estimate_contamination_ratios
+# from allensdk.brain_observatory.roi_masks import calculate_roi_and_neuropil_traces, create_roi_mask
+# from allensdk.brain_observatory.demixer import demix_time_dep_masks
 
 from sklearn.exceptions import ConvergenceWarning
 import warnings
@@ -24,7 +25,7 @@ np.seterr(divide='ignore',invalid='ignore')
 if __name__ == '__main__':
     list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
         '510214538','524691284','527048992','531006860','539670003']
-    Table_time = np.zeros((len(list_Exp_ID),3))
+    Table_time = np.zeros((len(list_Exp_ID)))
     video_type = sys.argv[1] # 'SNR' # 'Raw' # 
 
     # dir_video = 'D:\\ABO\\20 percent 200' 
@@ -86,9 +87,7 @@ if __name__ == '__main__':
         finish = time.time()
         print('neuropil subtraction time: {} s'.format(finish - finish_demix))
         
-        Table_time[ind_Exp,0] = finish_trace-start
-        Table_time[ind_Exp,1] = finish_demix-finish_trace
-        Table_time[ind_Exp,2] = finish-finish_demix
+        Table_time[ind_Exp] = finish-start
         savemat(os.path.join(dir_traces, Exp_ID+".mat"), {"compensated_traces": compensated_traces, \
             "r":r, "roi_traces":roi_traces, "unmixed_traces": unmixed_traces, "neuropil_traces": neuropil_traces})
 

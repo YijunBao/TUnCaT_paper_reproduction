@@ -33,12 +33,12 @@ if __name__ == '__main__':
     use_direction = False
     flexible_alpha = bool(int(sys.argv[3])) # True
     if flexible_alpha:
-        addon += '_novideounmix_r2_mixout'
+        addon += ''
         list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30]
-        # addon += '_novideounmix_r2_mixout1000'
+        # addon += '_1000'
         # list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000]
     else:
-        addon += '_novideounmix_r2_fixed_alpha'
+        addon += '_fixed_alpha'
         list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000]
     Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
 

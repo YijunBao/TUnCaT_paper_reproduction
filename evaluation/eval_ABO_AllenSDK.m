@@ -5,6 +5,8 @@ clear;
 % dir_video='D:\ABO\20 percent 200';
 % dir_label = 'C:\Matlab Files\TemporalLabelingGUI-master'; % 
 dir_video = '..\data\ABO';
+dir_traces='..\results\ABO\unmixed traces\';
+% dir_traces=dir_video;
 dir_label = [dir_video,'\GT transients'];
 list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
              '510214538';'524691284';'527048992';'531006860';'539670003'};
@@ -58,7 +60,7 @@ for tid = 1:length(list_spike_type)
                 list_thred_ratio=5:0.5:9; % 6:12; % 9:16; % 
             end
             folder = sprintf('traces_%s_%s%s%s%s%s',method,video,addon);
-            dir_FISSA = fullfile(dir_video,folder);
+            dir_FISSA = fullfile(dir_traces,folder);
             useTF = strcmp(video, 'Raw');
             num_ratio=length(list_thred_ratio);
 
@@ -67,7 +69,7 @@ for tid = 1:length(list_spike_type)
         if useTF
 %             dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
             load('..\template\GCaMP6f_spike_tempolate_mean.mat','filter_tempolate');
-            dFF = filter_tempolate;
+            dFF = squeeze(filter_tempolate)';
             dFF = dFF(dFF>exp(-1));
             dFF = dFF'/sum(dFF);
             kernel=fliplr(dFF);

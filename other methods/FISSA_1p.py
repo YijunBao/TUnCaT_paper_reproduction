@@ -30,7 +30,7 @@ if __name__ == '__main__':
     else:
         dir_video_SNR = dir_video
     dir_masks = os.path.join(dir_video, 'GT Masks')
-    dir_traces = os.path.join(dir_video, 'traces_FISSA_'+video_type+'_merge')
+    dir_traces = os.path.join(dir_video, 'traces_FISSA_'+video_type)
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 
     dir_trace_raw = os.path.join(dir_traces, "raw")

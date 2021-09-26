@@ -4,7 +4,9 @@ clear;
 %%
 % dir_video='E:\OnePhoton videos\cropped videos\';
 % dir_label = [dir_video,'split\'];
-dir_video = '..\data\ABO';
+dir_video = '..\data\1p';
+dir_traces='..\results\1p\unmixed traces\';
+% dir_traces=dir_video;
 dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
@@ -17,7 +19,7 @@ list_sigma_from = {'Unmix'}; % {'Raw','Unmix'};
 
 method = 'ours'; % {'FISSA','ours'}
 list_video={'Raw','SNR'}; % {'Raw','SNR'}
-addon = '_novideounmix_r2_mixout'; %  % '_eps=0.1'; % _n_iter
+addon = ''; %  % '_eps=0.1'; % _n_iter
 list_part1={''}; % , '_pertmin=0.5', '_pertmin=0.16'
 % part1 = ''; %, '_diag11'
 list_part2 = {''}; % , '_eps=0.1'
@@ -65,7 +67,7 @@ for tid = 1:length(list_spike_type)
             end
             folder = sprintf('traces_%s_%s%s%s%s%s',method,video,part1,part2,part3,addon);
 %             disp(folder);
-            dir_FISSA = fullfile(dir_video,folder);
+            dir_FISSA = fullfile(dir_traces,folder);
             useTF = strcmp(video, 'Raw');
 
 %             list_alpha = [0.1, 0.2, 0.3, 0.5, 1]; %
@@ -95,7 +97,7 @@ for tid = 1:length(list_spike_type)
             if useTF
 %                 dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
                 load('..\template\1P_spike_tempolate.mat','filter_tempolate');
-                dFF = filter_tempolate;
+                dFF = squeeze(filter_tempolate)';
                 dFF = dFF(dFF>exp(-1));
                 dFF = dFF'/sum(dFF);
                 kernel=fliplr(dFF);

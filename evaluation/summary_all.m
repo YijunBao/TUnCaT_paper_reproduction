@@ -1,0 +1,4 @@
+% Summarize the F1 and processing time
+summary_F1_alpha_float_fix
+summary_F1_timing_all_data
+summary_F1_timing_bin

@@ -5,6 +5,8 @@ clear;
 % dir_video='E:\OnePhoton videos\cropped videos\';
 % dir_label = [dir_video,'split\'];
 dir_video = '..\data\1p';
+dir_traces='..\results\1p\unmixed traces\';
+% dir_traces=dir_video;
 dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
@@ -55,7 +57,7 @@ for tid = 1:length(list_spike_type)
                 list_thred_ratio=0:10; % 6:0.5:9; % 8:2:20; % 
             end
             folder = sprintf('traces_%s_%s%s%s%s%s',method,video,addon);
-            dir_FISSA = fullfile(dir_video,folder);
+            dir_FISSA = fullfile(dir_traces,folder);
             useTF = strcmp(video, 'Raw');
             num_ratio=length(list_thred_ratio);
 
@@ -64,7 +66,7 @@ for tid = 1:length(list_spike_type)
         if useTF
 %             dFF = h5read('E:\OnePhoton videos\1P_spike_tempolate.h5','/filter_tempolate')';
             load('..\template\1P_spike_tempolate.mat','filter_tempolate');
-            dFF = filter_tempolate;
+            dFF = squeeze(filter_tempolate)';
             dFF = dFF(dFF>exp(-1));
             dFF = dFF'/sum(dFF);
             kernel=fliplr(dFF);

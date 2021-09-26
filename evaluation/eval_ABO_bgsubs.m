@@ -14,6 +14,8 @@ list_video= {'Raw','SNR'};
 % dir_video='D:\ABO\20 percent 200';
 % dir_label = 'C:\Matlab Files\TemporalLabelingGUI-master';
 dir_video = '..\data\ABO';
+dir_traces='..\results\ABO\unmixed traces\';
+% dir_traces=dir_video;
 dir_label = [dir_video,'\GT transients'];
 list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
              '510214538';'524691284';'527048992';'531006860';'539670003'};
@@ -23,7 +25,7 @@ MovMedianSubs = contains(list_spike_type{1},'MovMedian'); % false;
 
 % dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
 load('..\template\GCaMP6f_spike_tempolate_mean.mat','filter_tempolate');
-dFF = filter_tempolate;
+dFF = squeeze(filter_tempolate)';
 dFF = dFF(dFF>exp(-1));
 dFF = dFF'/sum(dFF);
 
@@ -57,8 +59,8 @@ for tid = 1:length(list_spike_type)
         end
         num_ratio=length(list_thred_ratio);
 %         folder = sprintf('traces_ours_%s_sigma1_diag11_v1',video);
-        folder = sprintf('traces_ours_%s_bgsubs',video);
-        dir_FISSA = fullfile(dir_video,folder);
+        folder = sprintf('traces_ours_%s',video); % _bgsubs
+        dir_FISSA = fullfile(dir_traces,folder);
         useTF = strcmp(video, 'Raw');
         [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_ratio));
 
@@ -125,7 +127,7 @@ for tid = 1:length(list_spike_type)
         if ~exist(spike_type)
             mkdir(spike_type);
         end
-        save(sprintf('%s\\scores_split_bgsubs_ex_%sVideo%s.mat',spike_type,video,baseline_std),...
+        save(sprintf('%s\\scores_split_bgsubs_%sVideo%s.mat',spike_type,video,baseline_std),...
             'list_recall','list_precision','list_F1','list_thred_ratio');
         mean_F1 = squeeze(mean(list_F1,1));
         [max_F1, ind_max] = max(mean_F1(:));
@@ -141,9 +143,9 @@ for tid = 1:length(list_spike_type)
 end
 end
 %% merge Table_time for two or three trials
-dir_path = 'D:\ABO\20 percent 200\traces_ours_SNR_novideounmix_r2_mixout1000\';
-part1=load([dir_path,'Table_time (0.1-100).mat']);
-part2=load([dir_path,'Table_time (200-1000).mat']);
-list_alpha = [double(part1.list_alpha),double(part2.list_alpha)];
-Table_time = [part1.Table_time(:,1:end-1), part2.Table_time(:,1:end)];
-save([dir_path,'Table_time.mat'],'list_alpha','Table_time');
+% dir_path = 'D:\ABO\20 percent 200\traces_ours_SNR_novideounmix_r2_mixout1000\';
+% part1=load([dir_path,'Table_time (0.1-100).mat']);
+% part2=load([dir_path,'Table_time (200-1000).mat']);
+% list_alpha = [double(part1.list_alpha),double(part2.list_alpha)];
+% Table_time = [part1.Table_time(:,1:end-1), part2.Table_time(:,1:end)];
+% save([dir_path,'Table_time.mat'],'list_alpha','Table_time');

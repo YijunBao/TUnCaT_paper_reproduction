@@ -2,7 +2,12 @@ clear;
 % addpath(genpath('C:\Matlab Files\Unmixing'));
 % addpath(genpath('C:\Matlab Files\Filter'));
 %%
-dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_video='E:\OnePhoton videos\cropped videos\';
+% dir_label = [dir_video,'split\'];
+dir_video = '..\data\1p';
+% dir_traces='..\results\1p\unmixed traces\';
+dir_traces = dir_video;
+dir_label = [dir_video,'\GT transients'];
 list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
     'c25_163_267','c27_114_176','c28_161_149',...
     'c25_123_348','c27_122_121','c28_163_244'};
@@ -11,11 +16,10 @@ list_Exp_ID = {'c25_59_228','c27_12_326','c28_83_210',...
 list_spike_type = {'1p'}; % {'only','include','exclude'};
 % spike_type = 'exclude'; % {'include','exclude','only'};
 list_sigma_from = {'Unmix'}; % {'Raw','Unmix'}; 
-dir_label = [dir_video,'split\'];
 
 method = 'ours'; % {'FISSA','ours'}
 list_video={'Raw','SNR'}; % {'Raw','SNR'}
-addon = '_merge_novideounmix_r2'; % '_eps=0.1'; % 
+addon = ''; % '_eps=0.1'; % 
 list_part1={''}; % , '_pertmin=0.5', '_pertmin=0.16'
 % part1 = ''; %, '_diag11'
 list_part2 = {''}; % , '_eps=0.1'
@@ -71,7 +75,7 @@ for tid = 1:length(list_spike_type)
             for nbin = list_nbin
             folder = sprintf('traces_%s_%s_%s%d%s%s%s%s',method,video,bin_option,nbin,part1,part2,part3,addon);
 %             disp(folder);
-            dir_FISSA = fullfile(dir_video,folder);
+            dir_FISSA = fullfile(dir_traces,folder);
             useTF = strcmp(video, 'Raw');
 
 %             list_alpha = [0.1, 0.2, 0.3, 0.5, 1]; %

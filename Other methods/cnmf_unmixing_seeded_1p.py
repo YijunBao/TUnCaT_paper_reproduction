@@ -97,7 +97,7 @@ if __name__ == "__main__":
         varname = 'mov' # 
         dir_video_SNR = dir_video
     dir_masks = os.path.join(dir_video, 'GT Masks')
-    dir_traces = os.path.join(dir_video, 'traces_CNMF_'+video_type+'_p'+str(p)+'_merge')
+    dir_traces = os.path.join(dir_video, 'traces_CNMF_'+video_type+'_p'+str(p))
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 
 

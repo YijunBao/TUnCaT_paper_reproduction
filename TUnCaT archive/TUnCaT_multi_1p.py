@@ -35,7 +35,7 @@ if __name__ == '__main__':
     epsilon = 0
     use_direction = False
     flexible_alpha = True
-    addon += '_merge_novideounmix_r2_mixout'
+    addon += ''
 
     # Load video and FinalMasks
     if video_type == 'SNR':
