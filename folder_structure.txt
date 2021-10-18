@@ -49,13 +49,13 @@
 |       traces_1p_for_Fig4A.m                           # Compare the unmixed traces of one-photon videos. Followed by "traces_1p_Fig4A.m"
 |       traces_1p_Fig4A.m                               # Plot the example unmixed traces of a one-photon video in Fig 4A
 |       frame_1p_Fig4A.m                                # Plot the example peak frames of a one-photon video in Fig 4A
-|       max_projection_S2Fig.m                          # Plot the maximum projection images of four videos in S2 Fig
-|       traces_alpha_for_S3Fig3A.m                      # Compare the unmixed traces of ABO videos using different fixed alpha. Followed by "traces_alpha_S3Fig3A.m"
-|       traces_alpha_S3Fig3A.m                          # Plot the example unmixed traces of ABO videos using different fixed alpha in S3 Fig A
-|       curves_alpha_S3FigB_E.m                         # Plot the F1 and processing speed with differnt fixed alpha in S3 Fig B-E
-|       time_ABO_full_S4Fig.m                           # Plot the processing time on full ABO videos in S4 Fig
-|       F1_time_bin_S5Fig.m                             # Plot the F1 and processing time with different downsampling ratios in S5 Fig
-|       F1_time_all_param_NAOMi_S6Fig.m                 # Plot the F1 and processing time for NAOMi videos with different simulation parameters in S6 Fig
+|       max_projection_FigS2.m                          # Plot the maximum projection images of four videos in Fig S2
+|       traces_alpha_for_FigS3A.m                       # Compare the unmixed traces of ABO videos using different fixed alpha. Followed by "traces_alpha_FigS3A.m"
+|       traces_alpha_FigS3A.m                           # Plot the example unmixed traces of ABO videos using different fixed alpha in Fig S3A
+|       curves_alpha_FigS3B_E.m                         # Plot the F1 and processing speed with differnt fixed alpha in Fig S3B-E
+|       time_ABO_full_FigS4.m                           # Plot the processing time on full ABO videos in Fig S4
+|       F1_time_bin_FigS5.m                             # Plot the F1 and processing time with different downsampling ratios in Fig S5
+|       F1_time_all_param_NAOMi_FigS6.m                 # Plot the F1 and processing time for NAOMi videos with different simulation parameters in Fig S6
 |
 +---results                                                             # Unmixed traces and F1 scores of all datasets
 |   +---1p                                                              # Unmixed traces and F1 scores of one-photon dataset
