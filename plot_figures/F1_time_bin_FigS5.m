@@ -14,11 +14,14 @@ addon = ''; % '_eps=0.1'; %
 dir_scores=['..\results\',spike_type,'\evaluation\'];
 % dir_scores=['..\evaluation\',spike_type,'\'];
 
-list_y = [0.895,0.958];
-list_y_time = [48,15];
+list_y = [0.855,0.975];
+list_y_time = [60,15];
 step_ns = 0.0015;
 step_ns_time = 1;
-ylim_set = [0.89,0.96];
+ylim_set = [0.85,1];
+
+size_mean = 20;
+size_each = 30;
 
 % sigma_from = 'Unmix'; % 'Raw_comp'; % {'Unmix'}; % 
 % list_video= {'Raw'}; % 'Raw','SNR'
@@ -120,14 +123,23 @@ clear ax;
 % ax(1) = subplot(1,2,1);
 hold on;
 for vid = 1:num_video
+    F1_all = squeeze(F1_CV(:,:,:,vid));
+    F1 = squeeze(mean(F1_all,1))';
+    F1_err = squeeze(std(F1_all,1,1))';
+    errorbar(list_nbin,F1,F1_err,F1_err,'CapSize',10,...
+        'LineWidth',1,'Color',color(5+vid,:),'HandleVisibility','off');
+end
+for vid = 1:num_video
+    F1_all = squeeze(F1_CV(:,:,:,vid));
+    scatter(reshape(repmat(list_nbin',num_Exp,1),1,[]),F1_all(:),size_each,color(5+vid,:),'x','HandleVisibility','off');    
+end
+for vid = 1:num_video
     video = list_video{vid};
 
     F1_all = squeeze(F1_CV(:,:,:,vid));
     F1 = squeeze(mean(F1_all,1))';
     F1_err = squeeze(std(F1_all,1,1))';
-    h=plot(list_nbin,F1,'.-','MarkerSize',18,'LineWidth',2,'Color',color(5+vid,:));
-        errorbar(list_nbin,F1,F1_err,F1_err,...
-            'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
+    h=plot(list_nbin,F1,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',color(5+vid,:));
 %     yl=get(gca,'Ylim');
 %     yl2 = [0,0];
 %     yl2(1) = floor(min(min(F1-F1_err))/grid_score)*grid_score;
@@ -162,10 +174,21 @@ saveas(gcf,[spike_type,' F1 bin downsample p.png']);
 figure('Position',[900,100+450,450,450]);
 hold on;
 for vid = 1:num_video
+    time_all = squeeze(time_CV(:,:,:,vid));
+    time = squeeze(mean(time_all,1))';
+    time_err = squeeze(std(time_all,1,1))';
+    errorbar(list_nbin,time,time_err,time_err,'CapSize',10,...
+        'LineWidth',1,'Color',color(5+vid,:),'HandleVisibility','off');
+end
+for vid = 1:num_video
+    time_all = squeeze(time_CV(:,:,:,vid)); % alpha_CV
+    scatter(reshape(repmat(list_nbin',num_Exp,1),1,[]),time_all(:),size_each,color(5+vid,:),'x','HandleVisibility','off');    
+end
+for vid = 1:num_video
     time_all = squeeze(time_CV(:,:,:,vid)); % alpha_CV
     time = squeeze(mean(time_all,1))';
     time_err = squeeze(std(time_all,1,1))';
-    h=plot(list_nbin,time,'.-','MarkerSize',18,'LineWidth',2,'Color',color(5+vid,:));
+    h=plot(list_nbin,time,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',color(5+vid,:));
     set(gca,'FontSize',14);
     set(gca,'XScale','log');
 %     set(gca,'YScale','log');
@@ -173,8 +196,6 @@ for vid = 1:num_video
     xlabel(xtext)
     % xlim()
     legend(list_video_legend,'Location','NorthOutside','NumColumns',2) % 'FontSize',12,
-    errorbar(list_nbin,time,time_err,time_err,...
-        'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
 %     yl=get(gca,'Ylim');
 %     yl2 = [0,0];
 %     yl2(1) = floor(min(min(time-time_err))/grid_time)*grid_time;
@@ -267,11 +288,14 @@ dir_scores=['..\results\',spike_type,'\evaluation\'];
 % dir_scores=['..\evaluation\',spike_type,'\'];
 addon = ''; % '_eps=0.1'; % 
 
-list_y = [0.67,0.89];
-list_y_time = [20,2];
+list_y = [0.62,0.93];
+list_y_time = [25,2];
 step_ns = 0.005;
 step_ns_time = 1;
-ylim_set = [0.65,0.9];
+ylim_set = [0.60,0.95];
+
+size_mean = 20;
+size_each = 30;
 
 % sigma_from = 'Unmix'; % 'Raw_comp'; % {'Unmix'}; % 
 % list_video= {'Raw'}; % 'Raw','SNR'
@@ -373,14 +397,23 @@ clear ax;
 % ax(1) = subplot(1,2,1);
 hold on;
 for vid = 1:num_video
+    F1_all = squeeze(F1_CV(:,:,:,vid));
+    F1 = squeeze(mean(F1_all,1))';
+    F1_err = squeeze(std(F1_all,1,1))';
+    errorbar(list_nbin,F1,F1_err,F1_err,'CapSize',10,...
+        'LineWidth',1,'Color',color(5+vid,:),'HandleVisibility','off');
+end
+for vid = 1:num_video
+    F1_all = squeeze(F1_CV(:,:,:,vid));
+    scatter(reshape(repmat(list_nbin',num_Exp,1),1,[]),F1_all(:),size_each,color(5+vid,:),'x','HandleVisibility','off');    
+end
+for vid = 1:num_video
     video = list_video{vid};
 
     F1_all = squeeze(F1_CV(:,:,:,vid));
     F1 = squeeze(mean(F1_all,1))';
     F1_err = squeeze(std(F1_all,1,1))';
-    h=plot(list_nbin,F1,'.-','MarkerSize',18,'LineWidth',2,'Color',color(5+vid,:));
-        errorbar(list_nbin,F1,F1_err,F1_err,...
-            'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
+    h=plot(list_nbin,F1,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',color(5+vid,:));
 %     yl=get(gca,'Ylim');
 %     yl2 = [0,0];
 %     yl2(1) = floor(min(min(F1-F1_err))/grid_score)*grid_score;
@@ -415,10 +448,21 @@ saveas(gcf,[spike_type,' F1 bin downsample p.png']);
 figure('Position',[900,100+450,450,450]);
 hold on;
 for vid = 1:num_video
+    time_all = squeeze(time_CV(:,:,:,vid));
+    time = squeeze(mean(time_all,1))';
+    time_err = squeeze(std(time_all,1,1))';
+    errorbar(list_nbin,time,time_err,time_err,'CapSize',10,...
+        'LineWidth',1,'Color',color(5+vid,:),'HandleVisibility','off');
+end
+for vid = 1:num_video
+    time_all = squeeze(time_CV(:,:,:,vid)); % alpha_CV
+    scatter(reshape(repmat(list_nbin',num_Exp,1),1,[]),time_all(:),size_each,color(5+vid,:),'x','HandleVisibility','off');    
+end
+for vid = 1:num_video
     time_all = squeeze(time_CV(:,:,:,vid)); % alpha_CV
     time = squeeze(mean(time_all,1))';
     time_err = squeeze(std(time_all,1,1))';
-    h=plot(list_nbin,time,'.-','MarkerSize',18,'LineWidth',2,'Color',color(5+vid,:));
+    h=plot(list_nbin,time,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',color(5+vid,:));
     set(gca,'FontSize',14);
     set(gca,'XScale','log');
 %     set(gca,'YScale','log');
@@ -426,8 +470,6 @@ for vid = 1:num_video
     xlabel(xtext)
     % xlim()
     legend(list_video_legend,'Location','NorthOutside','NumColumns',2) % 'FontSize',12,
-    errorbar(list_nbin,time,time_err,time_err,...
-        'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
 %     yl=get(gca,'Ylim');
 %     yl2 = [0,0];
 %     yl2(1) = floor(min(min(time-time_err))/grid_time)*grid_time;
@@ -519,11 +561,14 @@ spike_type = 'NAOMi'; % {'exclude','only','include'};
 dir_scores=['..\results\',spike_type,'\evaluation\'];
 % dir_scores=['..\evaluation\',spike_type,'\'];
 addon = ''; % '_eps=0.1'; % 
-list_y = [0.705,0.97];
-list_y_corr = [0.42,0.95];
-list_y_time = [4.1,9.5];
+list_y = [0.52,0.98];
+list_y_corr = [0.38,0.98];
+list_y_time = [3,9.5];
 step_ns = 0.01;
 step_ns_time = 0.2;
+
+size_mean = 20;
+size_each = 30;
 
 % sigma_from = 'Unmix'; % 'Raw_comp'; % {'Unmix'}; % 
 % list_video= {'Raw'}; % 'Raw','SNR'
@@ -627,17 +672,24 @@ clear ax;
 hold on;
 
 for vid = 1:num_video
+    F1_all = squeeze(F1_CV(:,:,:,vid));
+    F1 = squeeze(mean(F1_all,1))';
+    F1_err = squeeze(std(F1_all,1,1))';
+    errorbar(list_nbin,F1,F1_err,F1_err,'CapSize',10,...
+        'LineWidth',1,'Color',color(5+vid,:),'HandleVisibility','off');
+end
+for vid = 1:num_video
+    F1_all = squeeze(F1_CV(:,:,:,vid));
+    scatter(reshape(repmat(list_nbin',num_Exp,1),1,[]),F1_all(:),size_each,color(5+vid,:),'x','HandleVisibility','off');    
+end
+for vid = 1:num_video
     video = list_video{vid};
     % disp(data(:,3)');
 
     F1_all = squeeze(F1_CV(:,:,:,vid));
     F1 = squeeze(mean(F1_all,1))';
     F1_err = squeeze(std(F1_all,1,1))';
-    h=plot(list_nbin,F1,'.-','MarkerSize',18,'LineWidth',2,'Color',color(5+vid,:));
-    for oid = 1:num_bin_option
-        errorbar(list_nbin,F1,F1_err,F1_err,...
-            'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
-    end
+    h=plot(list_nbin,F1,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',color(5+vid,:));
 %     yl2 = [0,0];
 %     yl2(1) = floor(min(min(F1-F1_err))/grid_score)*grid_score;
 %     yl2(2) = floor(max(max(F1+F1_err))/grid_score)*grid_score;
@@ -671,10 +723,21 @@ saveas(gcf,[spike_type,' F1 bin downsample p.png']);
 figure('Position',[500,550,450,450]);
 hold on;
 for vid = 1:num_video
+    time_all = squeeze(time_CV(:,:,:,vid));
+    time = squeeze(mean(time_all,1))';
+    time_err = squeeze(std(time_all,1,1))';
+    errorbar(list_nbin,time,time_err,time_err,'CapSize',10,...
+        'LineWidth',1,'Color',color(5+vid,:),'HandleVisibility','off');
+end
+for vid = 1:num_video
+    time_all = squeeze(time_CV(:,:,:,vid));
+    scatter(reshape(repmat(list_nbin',num_Exp,1),1,[]),time_all(:),size_each,color(5+vid,:),'x','HandleVisibility','off');    
+end
+for vid = 1:num_video
     time_all = squeeze(time_CV(:,:,:,vid)); % alpha_CV
     time = squeeze(mean(time_all,1))';
     time_err = squeeze(std(time_all,1,1))';
-    h=plot(list_nbin,time,'.-','MarkerSize',18,'LineWidth',2,'Color',color(5+vid,:));
+    h=plot(list_nbin,time,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',color(5+vid,:));
     set(gca,'FontSize',14);
     set(gca,'XScale','log');
 %     set(gca,'YScale','log');
@@ -682,8 +745,6 @@ for vid = 1:num_video
     xlabel(xtext)
     % xlim()
     legend(list_video_legend,'Location','NorthOutside','NumColumns',2) % 'FontSize',12,
-    errorbar(list_nbin,time,time_err,time_err,...
-        'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
     yl=get(gca,'Ylim');
 %     yl2 = [0,0];
 %     yl2(1) = floor(min(min(time-time_err))/grid_time)*grid_time;
@@ -693,6 +754,10 @@ for vid = 1:num_video
 %     list_y = max(max(time(:,2:end)+time_err(:,2:end)))+step*(1:num_bin_option);
 %     yl2(2) = ceil(list_y(end)/grid_time)*grid_time;
 %     ylim(yl2);
+%     time_err_low = time_err.*(time_err<=time) + (time-yl(1)).*(time_err>time);
+%     errorbar(list_nbin,time,time_err_low,time_err,...
+%         'LineWidth',1,'Color',h.Color,'HandleVisibility','off');
+    ylim([0,20]);
 %     time_err_low = time_err.*(time_err<=time) + (time-yl(1)).*(time_err>time);
 %     errorbar(list_nbin,time,time_err_low,time_err,...
 %         'LineWidth',1,'Color',h.Color,'HandleVisibility','off');

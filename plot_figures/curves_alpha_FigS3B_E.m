@@ -17,6 +17,8 @@ list_p_cutoff = [0.05, 0.005, 0];
 grid_score = 0.05;
 ratio_step = 1/20;
 ratio_ns = 1/5;
+size_mean = 20;
+size_each = 30;
 
 % spike_type = 'simulation';
 % simu_opt = '10s_30Hz';
@@ -33,12 +35,14 @@ max_alpha = 300;
 min_alpha = 0.1;
 step = 2;
 load([dir_scores,'\F1_split_fix_float_alpha_ksd-psd.mat'])
+num_addon = length(list_addon);
+clear h he hs
 
 for vid = 1:length(list_video)
     video = list_video{vid};
     figure('Position',[100,100+450*(vid-1),500,450],'Color','w');
     hold on;
-    for addid = 1:length(list_addon)
+    for addid = 1:num_addon
         addon = list_addon{addid};
         list_alpha = Table_list_alpha{addid,vid};
         recall_CV = Table_recall_CV{addid,vid};
@@ -55,17 +59,20 @@ for vid = 1:length(list_video)
 %         [max_F1, pos] = max(mean_F1,[],2);
 %         num_alpha = length(list_alpha);
 
-        h=plot(list_alpha',mean_F1,'.-','MarkerSize',18,'LineWidth',2,'Color',colors(addid,:)); % 
-        errorbar(list_alpha',mean_F1,std_F1,std_F1,'LineWidth',1,'HandleVisibility','off','Color',colors(addid,:)); % 
-        yl2 = [0.7,1.0];
+        h(num_addon+1-addid) = plot(list_alpha',mean_F1,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',colors(addid,:)); % 
+        he(num_addon+1-addid) = errorbar(list_alpha',mean_F1,std_F1,std_F1,'LineWidth',1,'CapSize',10,'HandleVisibility','off','Color',colors(addid,:)); % 
+        hs(num_addon+1-addid) = scatter(reshape(repmat(list_alpha',size(list_F1,1),1),1,[]),list_F1(:),size_each,colors(addid,:),'x');  % ,'HandleVisibility','off'  
+        yl2 = [0.6,1.0];
 %         yl2(1) = floor(min(min(mean_F1-std_F1))/grid_score)*grid_score;
 %         yl2(2) = ceil(max(max(mean_F1+std_F1))/grid_score)*grid_score;
         step_star = (yl2(2)-yl2(1))*ratio_step;
         step_ns = step_star*ratio_ns;
-        list_y = max(max(mean_F1+std_F1))+step_star;
+        list_y = 0.98;
+%         list_y = max(max(mean_F1+std_F1))+step_star;
 %         yl2(2) = ceil(list_y/grid_score)*grid_score;
         ylim(yl2);
     end
+    set(gca,'Children',[h, hs, he])
     for aid = 1:num_alpha % list_alpha_select'
         alpha_id = list_alpha_select(aid);
         p_sign = signrank(Table_F1_CV{1,vid}(:,alpha_id,:),Table_F1_CV{2,vid}(:,alpha_id,:)); % 
@@ -84,7 +91,8 @@ for vid = 1:length(list_video)
     set(gca,'XScale','log');
     xlim([10.^floor(log10(min_alpha)-1),10^ceil(log10(max_alpha))]);
     xticks(10.^(floor(log10(min_alpha)-1):ceil(log10(max_alpha))));
-    legend({'Floating \alpha','Fixed \alpha'},'Location','SouthWest');
+    legend({'Floating \alpha individual','Fixed \alpha individual',...
+        'Floating \alpha mean','Fixed \alpha mean'},'Location','SouthWest');
     title([video,' videos'])
 %     saveas(gcf,sprintf('ABO float fix alpha split, %s Video, alpha=%s-%s.emf',video,num2str(min_alpha),num2str(max_alpha)));
     saveas(gcf,sprintf('ABO float fix alpha F1, %s Video.png',video));
@@ -97,6 +105,8 @@ list_p_cutoff = [0.05, 0.005, 0];
 grid_score = 0.05;
 ratio_step = 1/20;
 ratio_ns = 1/5;
+size_mean = 20;
+size_each = 30;
 
 % spike_type = 'simulation';
 % simu_opt = '10s_30Hz';
@@ -113,13 +123,15 @@ max_alpha = 300;
 min_alpha = 0.1;
 step = 2;
 load([dir_scores,'\Time_alpha_ABO.mat'],'list_alpha_all','Table_time_all','list_video','list_addon')
+num_addon = length(list_addon);
+clear h he hs
 
 for vid = 1:length(list_video)
     video = list_video{vid};
     figure('Position',[100,100+450*(vid-1),500,450],'Color','w');
     hold on;
     Table_time_vid = cell(length(list_addon),1);
-    for addid = 1:length(list_addon)
+    for addid = 1:num_addon
         list_alpha = list_alpha_all{addid,vid};
         Table_time = Table_time_all{addid,vid};
         Table_time = Table_time + Table_time(:,end);
@@ -135,17 +147,19 @@ for vid = 1:length(list_video)
 %         [max_F1, pos] = max(mean_F1,[],2);
 %         num_alpha = length(list_alpha);
 
-        h=plot(list_alpha',mean_time,'.-','MarkerSize',18,'LineWidth',2,'Color',colors(addid,:)); % 
-        errorbar(list_alpha',mean_time,std_time,std_time,'LineWidth',1,'HandleVisibility','off','Color',colors(addid,:)); % 
-        yl2 = [0,100];
+        h(num_addon+1-addid) = plot(list_alpha',mean_time,'.-','MarkerSize',size_mean,'LineWidth',2,'Color',colors(addid,:)); % 
+        he(num_addon+1-addid) = errorbar(list_alpha',mean_time,std_time,std_time,'LineWidth',1,'CapSize',10,'HandleVisibility','off','Color',colors(addid,:)); % 
+        hs(num_addon+1-addid) = scatter(reshape(repmat(list_alpha,size(Table_time,1),1),1,[]),Table_time(:),size_each,colors(addid,:),'x');  % ,'HandleVisibility','off'  
+        yl2 = [0,120];
 %         yl2(1) = floor(min(min(mean_time-std_time))/grid_score)*grid_score;
 %         yl2(2) = ceil(max(max(mean_time+std_time))/grid_score)*grid_score;
         step_star = (yl2(2)-yl2(1))*ratio_step;
         step_ns = step_star*ratio_ns;
-        list_y = max(max(mean_time+std_time))+step_star;
+        list_y = max(max(Table_time(:)))+step_star;
 %         yl2(2) = ceil(list_y/grid_score)*grid_score;
         ylim(yl2);
     end
+    set(gca,'Children',[h, hs, he])
     for aid = 1:num_alpha % list_alpha_select'
         alpha_id = list_alpha_select(aid);
         p_sign = signrank(Table_time_vid{1}(:,alpha_id),Table_time_vid{2}(:,alpha_id)); % 
@@ -164,7 +178,8 @@ for vid = 1:length(list_video)
     set(gca,'XScale','log');
     xlim([10.^floor(log10(min_alpha)-1),10^ceil(log10(max_alpha))]);
     xticks(10.^(floor(log10(min_alpha)-1):ceil(log10(max_alpha))));
-    legend({'Floating \alpha','Fixed \alpha'},'Location','NorthEast');
+%     legend({'Floating \alpha individual','Fixed \alpha individual',...
+%         'Floating \alpha mean','Fixed \alpha mean'}); % ,'Location','East'
     title([video,' videos'])
 %     saveas(gcf,sprintf('ABO float fix alpha time, %s Video, alpha=%s-%s.emf',video,num2str(min_alpha),num2str(max_alpha)));
     saveas(gcf,sprintf('ABO float fix alpha time, %s Video.png',video));
