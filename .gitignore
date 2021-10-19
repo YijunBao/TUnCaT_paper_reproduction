@@ -1,4 +1,4 @@
-results/*
+results/*/unmixed traces
 data
 data/ABO/*.h5
 *.asv
