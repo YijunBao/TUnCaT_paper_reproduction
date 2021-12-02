@@ -1,4 +1,6 @@
 clear;
+% addpath(genpath('C:\Matlab Files\STNeuroNet-master\Software'))
+% addpath(genpath('C:\Other methods\caiman_data'))
 % addpath(genpath('C:\Matlab Files\Unmixing'));
 % addpath(genpath('C:\Matlab Files\Filter'));
 %%
@@ -10,8 +12,10 @@ dir_traces='..\results\ABO\unmixed traces\';
 dir_label = [dir_video,'\GT transients'];
 list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
              '510214538';'524691284';'527048992';'531006860';'539670003'};
+dir_GTMasks = [dir_video,'\GT Masks'];
 % list_Exp_ID = list_Exp_ID([2,3]);
 num_Exp=length(list_Exp_ID);
+ThJaccard = 0.5;
 
 list_spike_type = {'ABO'}; % 
 % list_spike_type = {'include','only','exclude'}; % 
@@ -22,15 +26,17 @@ list_baseline_std = {'_ksd-psd'}; % , ''
 % baseline_std = ''; % '_psd'; % '_ksd-psd'; % 
 MovMedianSubs = contains(list_spike_type{1},'MovMedian'); % false;
 
-method = 'ours'; % {'FISSA','ours'}
+method = 'SUNS_complete+ours'; % {'FISSA','ours'}
 list_video={'Raw','SNR'}; % {'Raw','SNR'}
-addon = ''; %,_fixed_alpha '_eps=0.1'; % _n_iter _fixed_alpha
-list_part1={''}; % , '_pertmin=0.5', '_pertmin=0.16'
+addon = '';  %'_novideounmix_r2_mixout';% ,_fixed_alpha '_eps=0.1'; % _n_iter _fixed_alpha
+list_part1={''}; %
 % part1 = ''; %, '_diag11'
 list_part2 = {''}; % , '_eps=0.1'
 % part2=''; % ,'v2'
 list_part3 = {''}; % , '_range'
 max_alpha = inf;
+% list_IoU = 0.2:0.1:0.5; % 
+onlyTP =false;
 
 %%
 for bsid = 1:length(list_baseline_std)
@@ -50,6 +56,8 @@ end
 % std_method = 'psd';  % comp
 for tid = 1:length(list_spike_type)
     spike_type = list_spike_type{tid}; % 
+    % for ind_IoU = 1:length(list_IoU)
+    %     ThJaccard = list_IoU(ind_IoU);
     for inds = 1:length(list_sigma_from)
         sigma_from = list_sigma_from{inds};
         for ind_video = 1:length(list_video)
@@ -71,6 +79,8 @@ for tid = 1:length(list_spike_type)
             end
             folder = sprintf('traces_%s_%s%s%s%s%s',method,video,part1,part2,part3,addon);
             dir_FISSA = fullfile(dir_traces,folder);
+            folder_SUNS = 'SUNS_complete Masks';
+            dir_SUNS = fullfile(dir_traces,folder_SUNS);
             useTF = strcmp(video, 'Raw');
 
 %             list_alpha = [0.1, 0.2, 0.3, 0.5, 1]; %
@@ -97,7 +107,7 @@ for tid = 1:length(list_spike_type)
             [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_alpha, num_ratio));
 
             if useTF
-%                 dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
+                % dFF = h5read('C:\Matlab Files\Filter\GCaMP6f_spike_tempolate_mean.h5','/filter_tempolate')';
                 load('..\template\GCaMP6f_spike_tempolate_mean.mat','filter_tempolate');
                 dFF = squeeze(filter_tempolate)';
                 dFF = dFF(dFF>exp(-1));
@@ -112,22 +122,37 @@ for tid = 1:length(list_spike_type)
             for ii = 1:num_Exp
                 Exp_ID = list_Exp_ID{ii};
                 fprintf('\b\b\b\b\b\b\b\b\b\b\b%s: ',Exp_ID);
+
+    %             load(fullfile(dir_FISSA,[Exp_ID,'.mat']),'C_gt','YrA_gt');
+                load(fullfile(dir_SUNS,['FinalMasks_',Exp_ID,'.mat']),'FinalMasks');
+                [SpatialRecall, SpatialPrecision, SpatialF1,m] = GetPerformance_Jaccard(...
+                    dir_GTMasks,list_Exp_ID{ii},FinalMasks,ThJaccard);
+                [select_seg, select_GT] = find(m');
+
                 load(fullfile(dir_label,['output_',Exp_ID,'.mat']),'output');
-                if contains(spike_type,'exclude')
-                    for oo = 1:length(output)
-                        if ~isempty(output{oo}) && all(output{oo}(:,3))
-                            output{oo}=[];
-                        end
-                    end
-                elseif contains(spike_type,'only')
-                    for oo = 1:length(output)
-                        if ~isempty(output{oo}) && ~all(output{oo}(:,3))
-                            output{oo}=[];
-                        end
-                    end
+                if onlyTP
+                    output = output(select_GT);
+                else
+                    [nGT,nfound] = size(m);
+                    remaining = setdiff(1:nfound,select_seg);
+                    output = [output;cell(length(remaining),1)];
                 end
 
                 load(fullfile(dir_FISSA,'raw',[Exp_ID,'.mat']),'traces', 'bgtraces');
+                if onlyTP
+                    traces = traces(:,select_seg);
+                    bgtraces = bgtraces(:,select_seg);
+                else
+                    T = size(traces,1);
+                    traces_gt=zeros(T,nGT);
+                    bgtraces_gt = zeros(T,nGT);
+                    traces_gt(:,select_GT) = traces(:,select_seg);
+                    bgtraces_gt(:,select_GT) = bgtraces(:,select_seg);
+                    traces_gt = [traces_gt, traces(:,remaining)];
+                    bgtraces_gt = [bgtraces_gt, bgtraces(:,remaining)];
+                    traces = traces_gt;
+                    bgtraces = bgtraces_gt;
+                end
                 traces_raw = traces'-bgtraces';
                 if MovMedianSubs
                     traces_raw = traces_raw - movmedian(traces_raw,900,2);
@@ -144,6 +169,14 @@ for tid = 1:length(list_spike_type)
                     alpha = list_alpha(jj);
                     fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\balpha=%6.3f: ',alpha);
                     load(fullfile(dir_FISSA,sprintf('alpha=%6.3f',alpha),[Exp_ID,'.mat']),'traces_nmfdemix');
+                    if onlyTP
+                        traces_nmfdemix = traces_nmfdemix(:,select_seg);
+                    else
+                        traces_nmfdemix_gt=zeros(T,nGT);
+                        traces_nmfdemix_gt(:,select_GT) = traces_nmfdemix(:,select_seg);
+                        traces_nmfdemix_gt = [traces_nmfdemix_gt, traces_nmfdemix(:,remaining)];
+                        traces_nmfdemix = traces_nmfdemix_gt;
+                    end
                     if MovMedianSubs
                         traces_nmfdemix = traces_nmfdemix - movmedian(traces_nmfdemix,900,2);
                     end
@@ -166,7 +199,7 @@ for tid = 1:length(list_spike_type)
             %             fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\bthresh=%5.2f: ',num_ratio);
             %             thred=mu_unmixed+sigma_unmixed*thred_ratio;
                         [recall, precision, F1,individual_recall,individual_precision,spikes_GT_array,spikes_eval_array]...
-                            = GetPerformance_SpikeDetection_split(output,traces_unmixed_filt,thred_ratio,sigma,mu_unmixed);
+                            = GetPerformance_SpikeDetection_FPneurons(output,traces_unmixed_filt,thred_ratio,sigma,mu_unmixed);
                         list_recall(ii,jj,kk)=recall; 
                         list_precision(ii,jj,kk)=precision;
                         list_F1(ii,jj,kk)=F1;
@@ -186,8 +219,13 @@ for tid = 1:length(list_spike_type)
             if ~exist(spike_type)
                 mkdir(spike_type);
             end
-            save(sprintf('%s\\scores_split_%s_%sVideo%s%s%s%s_%sSigma%s.mat',spike_type,method,video,part1,part2,part3,addon,sigma_from,baseline_std),...
-                'list_recall','list_precision','list_F1','list_thred_ratio','list_alpha');
+            if onlyTP
+                save(sprintf('%s\\scores_split_%s_%sVideo%s%s%s%s_%s_%sSigma%s_onlyTP.mat',spike_type,method,video,part1,part2,part3,addon,num2str(ThJaccard),sigma_from,baseline_std),...
+                    'list_recall','list_precision','list_F1','list_thred_ratio','list_alpha');
+            else
+                save(sprintf('%s\\scores_split_%s_%sVideo%s%s%s%s_%s_%sSigma%s_hasFNFP.mat',spike_type,method,video,part1,part2,part3,addon,num2str(ThJaccard),sigma_from,baseline_std),...
+                    'list_recall','list_precision','list_F1','list_thred_ratio','list_alpha');
+            end
             mean_F1 = squeeze(mean(list_F1,1));
             if isvector(mean_F1)
                 mean_F1 = mean_F1';
@@ -214,5 +252,6 @@ for tid = 1:length(list_spike_type)
             end
         end
     end
+    % end
 end
 end

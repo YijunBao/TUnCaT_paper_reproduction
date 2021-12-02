@@ -191,7 +191,7 @@ end
 set(gca,'FontName','Arial','FontSize',18, 'LineWidth',1);
 
 xpoints=(1:numgroups)' - groupwidth/2 + (2*(1:numbars)-1) * groupwidth / (2*numbars);
-list_y_line = 3000*1.5.^(0:5);
+list_y_line = 4000*1.5.^(0:5);
 list_y_star = list_y_line*1.1;
 line([xpoints(1,1),xpoints(1,4)],list_y_line(1)*[1,1],'color','k','LineWidth',2)
 text(xpoints(1,1),list_y_star(1),'**','HorizontalAlignment', 'left','FontSize',14,'Color',color(1,:));
@@ -718,7 +718,7 @@ legend(list_method(1:numbars),'Interpreter','none','numcolumns',2,...
     'Location','northoutside','FontName','Arial','FontSize',14);
 box off
 set(gca,'YScale','log');
-ylim([0.1,1000]);
+ylim([1,1000]);
 % yticks(10.^(-1:4));
 % set(gca,'Position',two_errorbar_position);
 % title('F1 of all methods, ABO')

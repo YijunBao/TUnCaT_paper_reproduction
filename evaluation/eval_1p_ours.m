@@ -163,6 +163,12 @@ for tid = 1:length(list_spike_type)
                         list_precision(ii,jj,kk)=precision;
                         list_F1(ii,jj,kk)=F1;
                     end
+                    if alpha >= 100
+                        fprintf('\b');
+                    end
+                    if alpha >= 1000
+                        fprintf('\b');
+                    end
             %         fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
                 end
                 fprintf('\b\b\b\b\b\b\b\b\b\b\b\b\b\b');
@@ -192,7 +198,7 @@ for tid = 1:length(list_spike_type)
             [L1, L2] = size(mean_F1);
             [ind1, ind2] = ind2sub([L1, L2],ind_max);
             disp([list_alpha(ind1), list_thred_ratio(ind2),max_F1])
-        fprintf('\b');
+            fprintf('\b');
             if ind1 == 1
                 disp('Decrease alpha');
             elseif ind1 == L1

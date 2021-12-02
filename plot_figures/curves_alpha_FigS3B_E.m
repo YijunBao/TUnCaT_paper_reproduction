@@ -6,7 +6,7 @@ color=[  0    0.4470    0.7410
     0.4660    0.6740    0.1880
     0.3010    0.7450    0.9330
     0.6350    0.0780    0.1840];
-% color_many = distinguishable_colors(16);
+color_many = distinguishable_colors(16);
 dir_scores='..\results\ABO\evaluation\';
 % dir_scores='..\evaluation\ABO\';
 
@@ -29,8 +29,9 @@ size_each = 30;
 % % list_Table_ext = cell(1,1,4);
 % colors = distinguishable_colors(17);
 % right = 'Residue'; % {'Correlation','Residue','MSE','Pctmin'};
-colors = color([7,6],:);
+% colors = color([7,6],:);
 % colors = color_many([5,8],:);
+colors = [color(5,:);color_many(5,:)];
 max_alpha = 300;
 min_alpha = 0.1;
 step = 2;
@@ -117,8 +118,9 @@ size_each = 30;
 % % list_Table_ext = cell(1,1,4);
 % colors = distinguishable_colors(17);
 % right = 'Residue'; % {'Correlation','Residue','MSE','Pctmin'};
-colors = color([7,6],:);
+% colors = color([7,6],:);
 % colors = color_many([5,8],:);
+colors = [color(5,:);color_many(5,:)];
 max_alpha = 300;
 min_alpha = 0.1;
 step = 2;
@@ -178,8 +180,13 @@ for vid = 1:length(list_video)
     set(gca,'XScale','log');
     xlim([10.^floor(log10(min_alpha)-1),10^ceil(log10(max_alpha))]);
     xticks(10.^(floor(log10(min_alpha)-1):ceil(log10(max_alpha))));
-%     legend({'Floating \alpha individual','Fixed \alpha individual',...
-%         'Floating \alpha mean','Fixed \alpha mean'}); % ,'Location','East'
+    le = legend({'Floating \alpha individual','Fixed \alpha individual',...
+        'Floating \alpha mean','Fixed \alpha mean'}); 
+    if list_y < 90
+        set(le,'Position',[0.5,0.7,0.4,0.2]);
+    else
+        set(le,'Position',[0.5,0.55,0.4,0.2]);
+    end
     title([video,' videos'])
 %     saveas(gcf,sprintf('ABO float fix alpha time, %s Video, alpha=%s-%s.emf',video,num2str(min_alpha),num2str(max_alpha)));
     saveas(gcf,sprintf('ABO float fix alpha time, %s Video.png',video));

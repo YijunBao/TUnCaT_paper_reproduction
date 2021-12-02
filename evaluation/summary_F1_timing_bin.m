@@ -62,12 +62,22 @@ for ind = 1:length(list_spike_type)
                             method,video,bin_option,nbin,part1,part2,part3,addon,sigma_from,baseline_std);
                     end
                 end
-        %         folder = sprintf('traces_ours');
+
+                if contains(video,'SNR')
+                    load([dir_video,'\SNR Video\Table_time.mat'],'Table_time');
+                    Table_time_SNR = Table_time';
+                else
+                    Table_time_SNR = zeros(num_Exp,1);
+                end
+        
                 dir_FISSA = fullfile(dir_traces,folder);
                 load([dir_FISSA,'\Table_time.mat'],'list_alpha','Table_time')
                 list_alpha_all_time{bid,oid,vid} = list_alpha;
-                Table_time_all{bid,oid,vid} = Table_time;
-
+                % Table_time_all{bid,oid,vid} = Table_time;
+                Table_time_temp = Table_time;
+                Table_time_temp(:,end) = Table_time_temp(:,end)+Table_time_SNR;
+                Table_time_all{bid,oid,vid} = Table_time_temp;
+    
                 load(scores,'list_recall','list_precision','list_F1','list_thred_ratio','list_alpha');
                 list_recall_all{bid,oid,vid} = list_recall;
                 list_precision_all{bid,oid,vid} = list_precision;
