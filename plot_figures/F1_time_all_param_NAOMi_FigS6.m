@@ -36,6 +36,7 @@ list_video = {'Raw', 'SNR'};
 num_video = length(list_video);
 addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
+list_legend = {'FISSA','CNMF','Allen SDK','TUnCaT'};
 
 %%
 for vid = 1:num_video

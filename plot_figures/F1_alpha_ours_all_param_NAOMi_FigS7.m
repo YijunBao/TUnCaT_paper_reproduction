@@ -59,7 +59,6 @@ for vid = 1:num_video
         %% 
         load([dir_scores,'\timing_',param_vary,'_GCaMP6f_opt_alpha_1 ',baseline_std,'.mat']);
         if strcmp(param_vary,'sensor')
-            list_prot = list_param;
             list_param = 1:length(list_prot);
         end
 

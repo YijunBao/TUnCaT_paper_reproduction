@@ -3,7 +3,8 @@ clear;
 % addpath(genpath('C:\Matlab Files\Unmixing'));
 % addpath(genpath('C:\Matlab Files\Filter'));
 % %%
-spike_type = 'ABO'; % dir_video='D:\ABO\20 percent 200\';
+spike_type = 'ABO'; 
+% dir_video='D:\ABO\20 percent 200\';
 dir_video = ['..\data\',spike_type,'\'];
 % dir_traces=dir_video;
 % dir_scores=['..\evaluation\',spike_type,'\'];
@@ -50,7 +51,7 @@ for vid = 1:num_video
 %         ['traces_FISSA_',video,' (tol=1e-4, max_iter=20000)'],...
 %     list_tracefile{1}=list_tracefile{3};
     if contains(video,'SNR')
-        load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+        load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
         Table_time_SNR = Table_time';
     else
         Table_time_SNR = zeros(10,1);
@@ -132,7 +133,7 @@ for vid = 1:num_video
         }'; % ,...
 %     list_tracefile{1}=list_tracefile{3};
     if contains(video,'SNR')
-        load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+        load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
         Table_time_SNR = Table_time';
     else
         Table_time_SNR = zeros(9,1);
@@ -216,7 +217,7 @@ for vid = 1:num_video
         }'; % ,...
 %     list_tracefile{1}=list_tracefile{3};
     if contains(video,'SNR')
-        load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+        load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
         Table_time_SNR = Table_time';
     else
         Table_time_SNR = zeros(10,1);
@@ -269,7 +270,7 @@ dir_scores=['..\results\',spike_type,'\evaluation\'];
 %              '510214538';'524691284';'527048992';'531006860';'539670003'};
 % list_Exp_ID = list_Exp_ID([2,3]);
 SUNS = 'SUNS_complete'; % 'SUNS_noSF'; % 
-folder_SUNS = [SUNS(6:end),'\output_masks\'];
+folder_SUNS = [SUNS,'\output_masks\'];
 
 list_spike_type = {'ABO'}; % {'include','exclude','only'}; % 
 % list_spike_type = cellfun(@(x) [x,'_BGSubs'], list_spike_type, 'UniformOutput',false);
@@ -312,10 +313,10 @@ for vid = 1:num_video
 
     for mid = 1:num_method
         if contains(list_tracefile{mid},'SUNS')
-            load([dir_video,folder_SUNS,'Output_Info_All.mat'],'list_time')
+            load([dir_traces,folder_SUNS,'Output_Info_All.mat'],'list_time')
             Table_time_SNR = list_time(:,end);
         elseif contains(video,'SNR')
-            load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+            load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
             Table_time_SNR = Table_time';
         else
             Table_time_SNR = zeros(10,1);
@@ -345,7 +346,7 @@ for vid = 1:num_video
         end
     end
 end
-save(sprintf('%s\\timing_all_methods_split %s%s %s%s.mat',spike_type,addon,baseline_std,SUNS,TP),...
+save(sprintf('%s\\timing_all_methods_split %s%s %s%s.mat',dir_scores,addon,baseline_std,SUNS,TP),...
     'list_alpha_all_time','Table_time_all','list_method','list_video',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
 end

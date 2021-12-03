@@ -9,6 +9,7 @@ eval_1p_CNMF
 eval_1p_AllenSDK
 eval_1p_ours
 eval_1p_ours_bin
+
 eval_ABO_bgsubs
 eval_ABO_FISSA
 eval_ABO_CNMF
@@ -16,6 +17,15 @@ eval_ABO_AllenSDK
 eval_ABO_ours
 eval_ABO_ours_bin
 eval_ABO_ours_fixed_alpha
+
+eval_ABO_SUNS_ours_hasFNFP
+eval_ABO_SUNS_CNMF_hasFNFP
+eval_ABO_caiman_hasFNFP
+eval_ABO_ours_common
+eval_ABO_SUNS_ours_common
+eval_ABO_SUNS_CNMF_common
+eval_ABO_caiman_common
+
 eval_NAOMi_bgsubs
 eval_NAOMi_FISSA
 eval_NAOMi_CNMF

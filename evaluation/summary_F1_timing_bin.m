@@ -3,9 +3,11 @@
 % addpath(genpath('C:\Matlab Files\Filter'));
 list_spike_type = {'ABO','NAOMi','1p'};
 simu_opt = '120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f'; % 
+list_num_Exp = [10,10,9];
 
 for ind = 1:length(list_spike_type)
     spike_type = list_spike_type{ind};
+    num_Exp = list_num_Exp(ind);
     dir_video = ['..\data\',spike_type];
 %     dir_traces=dir_video;
 %     dir_scores=['..\evaluation\',spike_type,'\'];
@@ -64,7 +66,7 @@ for ind = 1:length(list_spike_type)
                 end
 
                 if contains(video,'SNR')
-                    load([dir_video,'\SNR Video\Table_time.mat'],'Table_time');
+                    load([dir_traces,'\SNR Video\Table_time.mat'],'Table_time');
                     Table_time_SNR = Table_time';
                 else
                     Table_time_SNR = zeros(num_Exp,1);

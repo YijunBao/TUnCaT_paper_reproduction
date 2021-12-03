@@ -15,13 +15,14 @@ magenta = [0.9,0.3,0.9];
 colors = distinguishable_colors(16);
 
 %% cross validation F1 and processing time for ABO complete pipeline (all neurons)
+spike_type = 'ABO'; % {'include','exclude','only'};
 TP = '_hasFNFP'; % '_onlyTP'; % '_common'; % 
 addon = ''; % '_novideounmix_r2_mixout'; % '_pertmin=0.16_eps=0.1_range'; %  
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 SUNS = 'SUNS_complete'; % 'SUNS_noSF'; % 
 dir_scores=['..\results\',spike_type,'\evaluation\'];
 % dir_scores=['..\evaluation\',spike_type,'\'];
-load(sprintf('include\\timing_all_methods_split %s%s %s%s 1126.mat',addon,baseline_std,SUNS,TP),...
+load(sprintf('%s\\timing_all_methods_split %s%s %s%s.mat',dir_scores,addon,baseline_std,SUNS,TP),...
     'list_alpha_all_time','Table_time_all','list_method','list_video',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all')
 
@@ -285,7 +286,7 @@ TP = '_common'; % '_hasFNFP'; % '_onlyTP'; %
 addon = ''; % '_novideounmix_r2_mixout'; % '_pertmin=0.16_eps=0.1_range'; %  
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 SUNS = 'SUNS_complete'; % 'SUNS_noSF'; % 
-load(sprintf('include\\timing_all_methods_split %s%s %s%s 1126.mat',addon,baseline_std,SUNS,TP),...
+load(sprintf('%s\\timing_all_methods_split %s%s %s%s.mat',dir_scores,addon,baseline_std,SUNS,TP),...
     'list_alpha_all_time','Table_time_all','list_method','list_video',...
     'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all')
 
@@ -506,8 +507,8 @@ saveas(gcf,sprintf('time SUNS ABO%s%s%s.png',addon,baseline_std,TP));
 % saveas(gcf,sprintf('time split SUNS ABO%s%s%s 1126.emf',addon,baseline_std,TP));
 
 %% plot ROC curve of all methods 
-load(['F1_time_ABO',addon,baseline_std,' ',SUNS,'.mat'],'list_method','list_video',...
-    'Table_recall_CV','Table_precision_CV','Table_F1_CV');
+% load(['F1_time_ABO',addon,baseline_std,' ',SUNS,'.mat'],'list_method','list_video',...
+%     'Table_recall_CV','Table_precision_CV','Table_F1_CV');
 [num_method,num_video] = size(Table_F1_CV);
 
 figure('Position',[100,550,900,400]); 

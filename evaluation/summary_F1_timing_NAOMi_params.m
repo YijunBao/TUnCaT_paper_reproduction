@@ -16,6 +16,7 @@ list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
+addon1 = '_novideounmix_r2_mixout';
 
 for vaid = 1:length(list_variable)
     variable = list_variable{vaid};
@@ -43,9 +44,9 @@ for vaid = 1:length(list_variable)
                     simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f'); % 
                 end
         end
-    % dir_video=['F:\NAOMi\',simu_opt,'\'];
-    dir_video = ['..\data\',spike_type,'\'];
-    dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+    dir_video=['F:\NAOMi\',simu_opt,'\'];
+    dir_traces=dir_video;
+%     dir_scores=['..\evaluation\',spike_type,'\'];
     dir_scores=['..\results\',spike_type,'\evaluation\'];
 
     % %%
@@ -58,15 +59,15 @@ for vaid = 1:length(list_variable)
             ['scores_split_AllenSDK_',simu_opt,'_',video,'Video_Unmix_Sigma',baseline_std,'.mat'],...
             }'; % ,...
     %     list_scorefile{1}=list_scorefile{3};
-        list_tracefile = {['traces_ours_',video,addon],... % ,['traces_ours_',video,'_nooverlap'],[]
+        list_tracefile = {['traces_ours_',video,addon1],... % ,['traces_ours_',video,'_nooverlap'],[]
             ['traces_FISSA_',video,''],...
-            ['traces_ours_',video,addon],...
+            ['traces_ours_',video,addon1],...
             ['traces_CNMF_',video,'_p1']...
             ['traces_AllenSDK_',video,''],...
             }'; % ,...
     %     list_tracefile{1}=list_tracefile{3};
         if contains(video,'SNR')
-            load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+            load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
             Table_time_SNR = Table_time';
         else
             Table_time_SNR = zeros(num_Exp,1);
@@ -125,6 +126,7 @@ list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
+addon1 = '_novideounmix_r2_mixout';
 
 [list_recall_all,list_precision_all,list_F1_all,list_alpha_all,list_thred_ratio_all,...
     list_corr_unmix_all,list_alpha_all_time,Table_time_all] = deal(cell(num_method,num_video,num_param));
@@ -137,9 +139,9 @@ if contains(prot,'6')
 else
     simu_opt = ['1100s_3Hz_N=200_100mW_noise10+23_NA0.8,0.6_',prot]; % 
 end
-% dir_video=['F:\NAOMi\',simu_opt,'\'];
-dir_video = ['..\data\',spike_type,'\'];
-dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+dir_video=['F:\NAOMi\',simu_opt,'\'];
+dir_traces=dir_video;
+% dir_scores=['..\evaluation\',spike_type,'\'];
 dir_scores=['..\results\',spike_type,'\evaluation\'];
 
 % %%
@@ -152,15 +154,15 @@ for vid = 1:num_video
         ['scores_split_AllenSDK_',simu_opt,'_',video,'Video_Unmix_Sigma',baseline_std,'.mat'],...
         }'; % ,...
 %     list_scorefile{1}=list_scorefile{3};
-    list_tracefile = {['traces_ours_',video,addon],... % ,['traces_ours_',video,'_nooverlap'],[]
+    list_tracefile = {['traces_ours_',video,addon1],... % ,['traces_ours_',video,'_nooverlap'],[]
         ['traces_FISSA_',video,''],...
-        ['traces_ours_',video,addon],...
+        ['traces_ours_',video,addon1],...
         ['traces_CNMF_',video,'_p1']...
         ['traces_AllenSDK_',video,''],...
         }'; % ,...
 %     list_tracefile{1}=list_tracefile{3};
     if contains(video,'SNR')
-        load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+        load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
         Table_time_SNR = Table_time';
     else
         Table_time_SNR = zeros(num_Exp,1);
@@ -184,7 +186,7 @@ for vid = 1:num_video
         end
         Table_time_temp(:,end) = Table_time_temp(:,end)+Table_time_SNR;
         Table_time_all{mid,vid,pid} = Table_time_temp;
-    if any(mid == [2,3])
+        if any(mid == [2,3])
             list_alpha_all_time{mid,vid,pid} = list_alpha;
         end
         
@@ -217,12 +219,13 @@ list_Exp_ID=arrayfun(@(x) ['Video_',num2str(x)], 0:9, 'UniformOutput', false);
 num_Exp = length(list_Exp_ID);
 
 spike_type = 'NAOMi'; % {'include','exclude','only'};
-list_addon={'_alpha=1','_novideounmix_r2_mixout'}; % 
+list_addon={'_alpha=1',''}; % 
 num_addon = length(list_addon);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
 % addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
+addon1 = '_novideounmix_r2_mixout';
 
 for vaid = 1:length(list_variable)
     variable = list_variable{vaid};
@@ -250,16 +253,16 @@ for vaid = 1:length(list_variable)
                     simu_opt = sprintf('120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f'); % 
                 end
         end
-    % dir_video=['F:\NAOMi\',simu_opt,'\'];
-    dir_video = ['..\data\',spike_type,'\'];
-    dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+    dir_video=['F:\NAOMi\',simu_opt,'\'];
+    dir_traces=dir_video;
+%     dir_scores=['..\evaluation\',spike_type,'\'];
     dir_scores=['..\results\',spike_type,'\evaluation\'];
 
     % %%
     for vid = 1:num_video
         video = list_video{vid};
         if contains(video,'SNR')
-            load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+            load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
             Table_time_SNR = Table_time';
         else
             Table_time_SNR = zeros(num_Exp,1);
@@ -273,11 +276,11 @@ for vaid = 1:length(list_variable)
         for aid = 1:num_addon
             addon = list_addon{aid};
             if contains(addon,'alpha=')
-                scorefile = ['scores',addon,'_ours_',simu_opt,'_',video,'Video_Unmix_compSigma','_novideounmix_r2_mixout',baseline_std,'.mat']; % 
-                tracefile = ['traces_ours_',video,'_novideounmix_r2_mixout']; % ,...
+                scorefile = ['scores',addon,'_ours_',simu_opt,'_',video,'Video_Unmix_Sigma',list_addon{3-aid},baseline_std,'.mat']; % 
+                tracefile = ['traces_ours_',video,addon1]; % ,...
             else
-                scorefile = ['scores_split_ours_',simu_opt,'_',video,'Video_Unmix_compSigma',addon,baseline_std,'.mat']; % 
-                tracefile = ['traces_ours_',video,addon]; % ,...
+                scorefile = ['scores_split_ours_',simu_opt,'_',video,'Video_Unmix_Sigma',addon,baseline_std,'.mat']; % 
+                tracefile = ['traces_ours_',video,addon1]; % ,...
             end
             dir_FISSA = fullfile(dir_traces,tracefile);
             load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
@@ -307,8 +310,8 @@ for vaid = 1:length(list_variable)
     end
     end
     save(sprintf('%s\\timing_%s_GCaMP6f_opt_alpha_1 %s%s.mat',dir_scores,variable,addon,baseline_std),'list_N_neuron',...
-        'list_param','list_alpha_all_time','Table_time_all','list_method','list_video','list_corr_unmix_all',...
-        'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
+        'list_param','list_alpha_all_time','Table_time_all','list_addon','list_video','list_corr_unmix_all',...
+        'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all','final_alpha_all');
 end
 
 %% NAOMi vary sensor compared to alpha=1
@@ -319,15 +322,16 @@ num_param = length(list_prot);
 num_Exp = length(list_Exp_ID);
 
 spike_type = 'NAOMi'; % {'include','exclude','only'};
-list_method = {'BG subtraction'; 'FISSA'; 'Our unmixing'; 'CNMF'; 'AllenSDK'}; % 'Remove overlap'; 'Percent pixels'; ; 'AllenSDK'
-num_method = length(list_method);
+list_addon={'_alpha=1',''}; % 
+num_addon = length(list_addon);
 list_video= {'Raw','SNR'}; % 'Raw','SNR'
 num_video = length(list_video);
 baseline_std = '_ksd-psd'; % '_psd'; % ''; % 
-addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
+% addon = ''; % '_pertmin=0.16_eps=0.1_range'; %  
+addon1 = '_novideounmix_r2_mixout';
 
 [list_recall_all,list_precision_all,list_F1_all,list_alpha_all,list_thred_ratio_all,...
-    list_corr_unmix_all,list_alpha_all_time,Table_time_all] = deal(cell(num_method,num_video,num_param));
+    list_corr_unmix_all,list_alpha_all_time,Table_time_all] = deal(cell(num_addon,num_video,num_param));
 list_N_neuron = zeros(num_Exp,num_param);
 
 for pid = 1:num_param
@@ -337,16 +341,16 @@ if contains(prot,'6')
 else
     simu_opt = ['1100s_3Hz_N=200_100mW_noise10+23_NA0.8,0.6_',prot]; % 
 end
-% dir_video=['F:\NAOMi\',simu_opt,'\'];
-dir_video = ['..\data\',spike_type,'\'];
-dir_traces=['..\results\',spike_type,'\unmixed traces\'];
+dir_video=['F:\NAOMi\',simu_opt,'\'];
+dir_traces=dir_video;
+% dir_scores=['..\evaluation\',spike_type,'\'];
 dir_scores=['..\results\',spike_type,'\evaluation\'];
 
 % %%
 for vid = 1:num_video
     video = list_video{vid};
     if contains(video,'SNR')
-        load([dir_video,'SNR Video\Table_time.mat'],'Table_time');
+        load([dir_traces,'SNR Video\Table_time.mat'],'Table_time');
         Table_time_SNR = Table_time';
     else
         Table_time_SNR = zeros(num_Exp,1);
@@ -360,13 +364,13 @@ for vid = 1:num_video
     for aid = 1:num_addon
         addon = list_addon{aid};
         if contains(addon,'alpha=')
-            scorefile = ['scores',addon,'_ours_',simu_opt,'_',video,'Video_Unmix_compSigma','_novideounmix_r2_mixout',baseline_std,'.mat']; % 
-            tracefile = ['traces_ours_',video,'_novideounmix_r2_mixout']; % ,...
+            scorefile = ['scores',addon,'_ours_',simu_opt,'_',video,'Video_Unmix_Sigma',list_addon{3-aid},baseline_std,'.mat']; % 
+            tracefile = ['traces_ours_',video,addon1]; % ,...
         else
-            scorefile = ['scores_split_ours_',simu_opt,'_',video,'Video_Unmix_compSigma',addon,baseline_std,'.mat']; % 
-            tracefile = ['traces_ours_',video,addon]; % ,...
+            scorefile = ['scores_split_ours_',simu_opt,'_',video,'Video_Unmix_Sigma',addon,baseline_std,'.mat']; % 
+            tracefile = ['traces_ours_',video,addon1]; % ,...
         end
-        dir_FISSA = fullfile(dir_video,tracefile);
+        dir_FISSA = fullfile(dir_traces,tracefile);
         load(fullfile(dir_FISSA,'Table_time.mat')); % ,'Table_time', 'list_alpha'
         if contains(addon,'alpha=')
             temp = split(addon,'=');
@@ -381,7 +385,7 @@ for vid = 1:num_video
         Table_time_all{aid,vid,pid} = Table_time_temp;
         list_alpha_all_time{aid,vid,pid} = list_alpha;
         
-        load(fullfile('.\',spike_type,scorefile));
+        load(fullfile(dir_scores,scorefile));
         list_recall_all{aid,vid,pid} = list_recall;
         list_precision_all{aid,vid,pid} = list_precision;
         list_F1_all{aid,vid,pid} = list_F1;
@@ -393,8 +397,8 @@ for vid = 1:num_video
 end
 end
 save(sprintf('%s\\timing_sensor_GCaMP6f_opt_alpha_1 %s%s.mat',dir_scores,addon,baseline_std),'list_N_neuron',...
-    'list_prot','list_alpha_all_time','Table_time_all','list_method','list_video','list_corr_unmix_all',...
-    'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all');
+    'list_prot','list_alpha_all_time','Table_time_all','list_addon','list_video','list_corr_unmix_all',...
+    'list_recall_all','list_precision_all','list_F1_all','list_alpha_all','list_thred_ratio_all','final_alpha_all');
 
 
 %% Merge Table_time.mat files

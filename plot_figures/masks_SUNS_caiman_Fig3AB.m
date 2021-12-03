@@ -19,21 +19,25 @@ save_figures = true;
 mag=4;
 mag_kernel = ones(mag,mag,'uint8');
 SNR_range = [2,10];
-addpath(genpath('C:\Matlab Files\STNeuroNet-master\Software'))
+% addpath(genpath('C:\Matlab Files\STNeuroNet-master\Software'))
 
 %% neurons and masks frame
-dir_video='D:\ABO\20 percent 200\';
-% varname = '/mov';
+% dir_video='D:\ABO\20 percent 200\';
+dir_video='..\data\ABO\';
 dir_video_raw = dir_video;
+% varname = '/mov';
+dir_video_SNR = [dir_video,'SNR video\'];
 % varname = '/network_input';
 % dir_video_raw = fullfile(dir_video, 'SNR video');
 dir_GT_masks = fullfile(dir_video,'GT Masks');
 list_Exp_ID={'501484643';'501574836';'501729039';'502608215';'503109347';...
              '510214538';'524691284';'527048992';'531006860';'539670003'};
+
+spike_type = 'ABO';
 % DirData = 'D:\ABO\';
 % dir_raw = 'D:\ABO\20 percent\';
-dir_video_SNR = [dir_video,'SNR video\'];
-% dir_traces = 'D:\ABO\20 percent\complete\traces\';
+% dir_traces=dir_video;
+dir_traces=['..\results\',spike_type,'\unmixed traces\'];
 
 k=1;
 xrange=1:200; yrange=1:200;
@@ -102,7 +106,7 @@ title(sprintf('SUNS, F1 = %1.2f',F1),'FontSize',12);
 rectangle('Position',[3,65,5,26],'FaceColor','w','LineStyle','None'); % 20 um scale bar
 
 if save_figures
-    saveas(gcf,[Exp_ID,' SNR SUNS.png']);
+    saveas(gcf,'Fig3A SUNS.png');
     % saveas(gcf,['figure 2\',Exp_ID,' SUNS noSF h.svg']);
 end
 
@@ -114,12 +118,12 @@ cdata=img_all.cdata;
 % figure; imshow(cdata);
 
 if save_figures
-    imwrite(permute(cdata,[2,1,3]),[Exp_ID,' SNR SUNS.tif']);
+    imwrite(permute(cdata,[2,1,3]),'Fig3A SUNS.tif');
 end
 
 
 %% CaImAn Batch
-dir_output_mask = [dir_video,'caiman-Batch_raw\Masks\'];
+dir_output_mask = [dir_traces,'caiman-Batch_raw\Masks\'];
 % dir_output_mask = 'D:\ABO\20 percent bin 5\CaImAn-Batch\Masks\';
 load([dir_output_mask, Exp_ID, '_neurons.mat'], 'finalSegments');
 CaImAn_Masks = finalSegments;
@@ -155,7 +159,7 @@ title(sprintf('CaImAn, F1 = %1.2f',F1),'FontSize',12);
 % set(h,'FontSize',12);
 
 if save_figures
-    saveas(gcf,[Exp_ID,' SNR CaImAn.png']);
+    saveas(gcf,'Fig3B CaImAn.png');
     % saveas(gcf,['figure 2\',Exp_ID,' CaImAn Batch h.svg']);
 end
 
@@ -167,32 +171,16 @@ cdata=img_all.cdata;
 % figure; imshow(cdata);
 
 if save_figures
-    imwrite(permute(cdata,[2,1,3]),[Exp_ID,' SNR CaImAn.tif']);
+    imwrite(permute(cdata,[2,1,3]),'Fig3B CaImAn.tif');
 end
 
-%% Plot raw max
-% load(['ABO mat\raw_max\raw_max_',Exp_ID,'.mat'],'raw_max');
-% raw_max=raw_max';
-% figure
-% imshow(raw_max(xrange,yrange),[300,1200]); axis('image'); colormap gray; %
-% xticklabels({}); yticklabels({});
-% hold on;
-% contour(FinalMasks_sum(xrange,yrange), 'Color', green); % green
-% % colorbar;
-% title('Raw max');
-% % rectangle('Position',rect1,'EdgeColor',magenta,'LineWidth',2);
-% % rectangle('Position',rect2,'EdgeColor',magenta,'LineWidth',2);
-% % rectangle('Position',rect3,'EdgeColor',magenta,'LineWidth',2);
-% % rectangle('Position',rect4,'EdgeColor',magenta,'LineWidth',2);
-% rectangle('Position',rect5,'EdgeColor',magenta,'LineWidth',2);
-
 %%
-figure('Position',[1250,750,500,300],'Color','w');
-imshow(SNR_max(xrange,yrange),SNR_range); axis('image'); colormap gray;
-xticklabels({}); yticklabels({});
-h=colorbar;
-set(get(h,'Label'),'String','Peak SNR','FontName','Arial');
-set(h,'FontSize',12);
+% figure('Position',[1250,750,500,300],'Color','w');
+% imshow(SNR_max(xrange,yrange),SNR_range); axis('image'); colormap gray;
+% xticklabels({}); yticklabels({});
+% h=colorbar;
+% set(get(h,'Label'),'String','Peak SNR','FontName','Arial');
+% set(h,'FontSize',12);
 % if save_figures
 %     saveas(gcf,'colorbar_SNR.svg');
 % %     save(['trace\',Exp_ID,' N',num2str(N_neuron),' trace.mat'],'trace_N');
