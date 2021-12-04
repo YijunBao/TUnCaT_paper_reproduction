@@ -23,14 +23,13 @@ np.seterr(divide='ignore',invalid='ignore')
 
 # %%
 if __name__ == '__main__':
-    list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
-                'c25_163_267','c27_114_176','c28_161_149',
-                'c25_123_348','c27_122_121','c28_163_244']
+    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
+        '510214538','524691284','527048992','531006860','539670003']
     Table_time = np.zeros((len(list_Exp_ID)))
     video_type = sys.argv[1] # 'SNR' # 'Raw' # 
 
-    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
-    dir_video = '..\\data\\1p\\'
+    # dir_video = 'D:\\ABO\\20 percent 200' 
+    dir_video = '..\\..\\data\\ABO\\'
     if video_type == 'SNR':
         varname = 'network_input' # 
         dir_video_SNR = os.path.join(dir_video, 'SNR video')

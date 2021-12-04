@@ -16,13 +16,14 @@ import time
 import os
 from os import makedirs 
 import sys
-sys.path.insert(0, 'C:\\Other methods\\CaImAn')
+sys.path.insert(0, 'C:\\Other methods\\CaImAn') # the path containing caiman code
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
-os.environ["CUDA_VISIBLE_DEVICES"]="1" # "-1", "1"
+# os.environ["CUDA_VISIBLE_DEVICES"]="1" # "-1", "1"
 #os.environ["OPENBLAS_NUM_THREADS"]= "1"
 #os.environ["MKL_NUM_THREADS"]="1"
-os.environ["CAIMAN_DATA"] = ".\\" #"D:\\ABO\\20 percent bin 5\\caiman-Batch\\" #
+os.environ["CAIMAN_DATA"] = "C:\\Other methods\\caiman_data" # the path containing CNN models
+# os.environ["CAIMAN_DATA"] = ".\\"
 
 import tensorflow as tf
 config = tf.ConfigProto()
@@ -59,69 +60,35 @@ if __name__ == "__main__":
     Layer = '275'
     task = 'test' # train, test
     rbin = 1
-
-    if rbin > 1:
-        datadir = 'D:\\ABO\\20 percent bin '+str(rbin)+'\\'
-    elif Layer == '275':
-        datadir = 'D:\\ABO\\20 percent 200\\'
-    else:
-        datadir = 'E:\\ABO 175\\20 percent\\'
+    datadir = '..\\..\\data\\ABO\\'
+    video_type = sys.argv[1] # 'Raw' # 'SNR' # 
+    dir_caiman = 'caiman-Batch_{}\\'.format(video_type)
 
     if Layer == '275':
         GTdir = datadir + 'GT Masks\\'
-    # 275
         ID = ['524691284','531006860','502608215','503109347','501484643','501574836', '501729039','539670003', '510214538','527048992']
         if task =='train':
-            #% These parameters are optimised
-            # rval_thr =  [0.75,0.8,0.85,0.9]. # space correlation threshold for accepting a new component. Default is 0.8
-            # min_SNR = [2,4,6,8]  # signal to noise ratio for accepting a component. Default is 2.5
-            # cnn_thr = [0.7,0.8,0.9]  # threshold for CNN based classifier. Default is 0.9
-            # cnn_lowest = [0,0.1,0.2] # neurons with cnn probability lower than this value are rejected. Default is 0.1
             rval_thr = [0.7, 0.8 ,0.9, 0.95]
             min_SNR = [3, 4, 5, 6]  # signal to noise ratio for accepting a component
             cnn_thr = [0.8, 0.9, 0.95, 0.98]  # threshold for CNN based classifier
             cnn_lowest = [0, 0.2, 0.4, 0.6] # neurons with cnn probability lower than this value are rejected
-            # rval_thr =  [0.75 ,0.85]
-            # min_SNR = [6, 8]  # signal to noise ratio for accepting a component
-            # cnn_thr = [0.8, 0.9]  # threshold for CNN based classifier
-            # cnn_lowest = [0.1, 0.2] # neurons with cnn probability lower than this value are rejected
-            # rval_thr =  [0.8]
-            # min_SNR = [6]  # signal to noise ratio for accepting a component
-            # cnn_thr = [0.8]  # threshold for CNN based classifier
-            # cnn_lowest = [0.1] # neurons with cnn probability lower than this value are rejected
         else:
-            # rval_thr = [0.8]*10 # [0.75,0.85,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75]
-            # min_SNR = [6]*10 # [8,6,8,8,8,8,8,8,8,8]
-            # cnn_thr = [0.8]*10 # [0.9]*10
-            # cnn_lowest = [0.1,0.2,0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1] # [0.1]*10 # 
-            # rval_thr = [0.9]*10
-            # min_SNR = [4]*10  
-            # cnn_thr = [0.95]*10
-            # cnn_lowest = [0.4]*10
+            #% These parameters are optimised
             rval_thr = [0.9, 0.9, 0.8, 0.9, 0.8, 0.9, 0.9, 0.9, 0.9, 0.9]
             min_SNR = [4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
             cnn_thr = [0.9, 0.9, 0.9, 0.98, 0.95, 0.95, 0.9, 0.9, 0.95, 0.95]
             cnn_lowest = [0.6, 0.4, 0.4, 0.6, 0.6, 0.6, 0.4, 0.4, 0.4, 0.4]
-    else:
-        # 175
-        GTdir = 'C:\\Matlab Files\\STNeuroNet-master\\Markings\\ABO\\Layer175\\FinalGT\\'
-        ID = ['501271265', '501704220','501836392', '502115959', '502205092', 
-            '504637623', '510514474', '510517131','540684467', '545446482']
-        rval_thr = [0.9]*10
-        min_SNR = [4]*10
-        cnn_thr = [0.9]*10
-        cnn_lowest = [0.4]*10 # ophys_experiment_
 
-    hdf5dir = datadir+'caiman-Batch_SNR\\hdf5\\'
+    hdf5dir = datadir+dir_caiman+'hdf5\\'
     if not os.path.exists(hdf5dir):
         makedirs(hdf5dir)
         
     if task == 'train':
-        savedir = datadir+'caiman-Batch_SNR\\train\\'
+        savedir = datadir+dir_caiman+'train\\'
         if not os.path.exists(savedir):
             makedirs(savedir)
     else:
-        savedir = datadir+'caiman-Batch_SNR\\'+Layer+'\\'
+        savedir = datadir+dir_caiman+Layer+'\\'
         if not os.path.exists(savedir):
             makedirs(savedir)
     
@@ -168,7 +135,10 @@ if __name__ == "__main__":
 
 #%%
 # if __name__ == "__main__":
-    AllFiles = glob.glob(datadir+"\\SNR video\\*_200_*"+extension) 
+    if video_type == 'SNR':
+        AllFiles = glob.glob(datadir+"\\SNR video\\*_200_*"+extension) 
+    else:
+        AllFiles = glob.glob(datadir+"\\*_200_*"+extension) 
     print(AllFiles) 
         
     # CV = 0  # Which fold of cross-validation? Only applicable for "train" mode

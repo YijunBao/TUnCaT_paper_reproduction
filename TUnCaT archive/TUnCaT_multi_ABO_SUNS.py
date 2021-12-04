@@ -14,12 +14,11 @@ from use_nmfunmix_mp_diag_v1_shm_MSE_novideo import use_nmfunmix
 
 if __name__ == '__main__':
     # sys.argv = ['py', 'Raw', '1', '0', '1', '1']
-    list_alpha = [0.01, 0.02, 0.03, 0.05, 0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10] # 
-    list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
-    Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
+    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
+        '510214538','524691284','527048992','531006860','539670003']
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
-    # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
-    dir_video = '..\\data\\NAOMi\\'
+    # dir_video = 'D:\\ABO\\20 percent 200' 
+    dir_video = '..\\data\\ABO\\'
 
     Qclip = 0
     epsilon = 0
@@ -33,24 +32,31 @@ if __name__ == '__main__':
     th_pertmin = float(sys.argv[4]) # 1 #
     if th_pertmin < 1:
         addon += '_th_pertmin={}'.format(sys.argv[4])
-        
+    
     th_residual = float(sys.argv[3]) # 0
     if th_residual > 0:
         addon += '_residual0={}'.format(sys.argv[3])
 
     flexible_alpha = bool(int(sys.argv[5])) # True # 
-    if not flexible_alpha:
+    if flexible_alpha:
+        # addon += ''
+        list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30]
+        # addon += '_1000'
+        # list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000]
+    else:
         addon += '_fixed_alpha'
+        list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000]
+    Table_time = np.zeros((len(list_Exp_ID), len(list_alpha)+1))
 
     # Load video and FinalMasks
     if video_type == 'SNR':
-        varname = 'network_input' 
+        varname = 'network_input'
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:
-        varname = 'mov' 
+        varname = 'mov'
         dir_video_SNR = dir_video
-    dir_masks = os.path.join(dir_video, 'GT Masks')
-    dir_traces = os.path.join(dir_video, 'traces_ours_'+video_type + addon)
+    dir_masks = os.path.join(dir_video, 'SUNS_complete Masks')
+    dir_traces = os.path.join(dir_video, 'traces_SUNS_complete+ours_'+video_type + addon)
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 
     dir_trace_raw = os.path.join(dir_traces, "raw")
@@ -79,7 +85,16 @@ if __name__ == '__main__':
             file_masks = h5py.File(filename_masks, 'r')
             Masks = np.array(file_masks['FinalMasks']).astype('bool')
             file_masks.close()
-        (ncells, Lxm, Lym) = masks_shape = Masks.shape
+        (ncells, Lxm, Lym) = Masks.shape
+        if Lxm < Lx:
+            Masks = np.pad(Masks,((0,0),(0,Lx-Lxm),(0,0)),'constant', constant_values=0)
+        elif Lxm > Lx:
+            Masks = Masks[:,:Lx,:]
+        if Lym < Ly:
+            Masks = np.pad(Masks,((0,0),(0,0),(0,Ly-Lym)),'constant', constant_values=0)
+        elif Lym > Ly:
+            Masks = Masks[:,:,:Ly]
+        masks_shape = Masks.shape
         shm_masks = SharedMemory(create=True, size=Masks.nbytes)
         FinalMasks = np.frombuffer(shm_masks.buf, dtype = 'bool')
         FinalMasks[:] = Masks.ravel()
@@ -102,7 +117,7 @@ if __name__ == '__main__':
         Table_time[ind_Exp, -1] = finish-start
 
         # Save the raw traces into a ".mat" file under folder "dir_trace_raw".
-        savemat(os.path.join(dir_trace_raw, Exp_ID+".mat"), {"traces": traces, "bgtraces": bgtraces})
+        savemat(os.path.join(dir_trace_raw, Exp_ID+".mat"), {"traces": traces, "bgtraces": bgtraces}) # , "outtraces": outtraces
 
         for (ind_alpha, alpha) in enumerate(list_alpha):
             print(Exp_ID, 'alpha =', alpha)
@@ -126,7 +141,6 @@ if __name__ == '__main__':
         shm_video.unlink()
         shm_masks.close()
         shm_masks.unlink()
-
 
         savemat(os.path.join(dir_traces, "Table_time.mat"), {"Table_time": Table_time, 'list_alpha': list_alpha})
 

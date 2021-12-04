@@ -23,12 +23,14 @@ np.seterr(divide='ignore',invalid='ignore')
 
 # %%
 if __name__ == '__main__':
-    list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
+    list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
+                'c25_163_267','c27_114_176','c28_161_149',
+                'c25_123_348','c27_122_121','c28_163_244']
     Table_time = np.zeros((len(list_Exp_ID)))
     video_type = sys.argv[1] # 'SNR' # 'Raw' # 
-    # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
-    dir_video = '..\\data\\NAOMi\\'
 
+    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
+    dir_video = '..\\..\\data\\1p\\'
     if video_type == 'SNR':
         varname = 'network_input' # 
         dir_video_SNR = os.path.join(dir_video, 'SNR video')

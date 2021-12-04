@@ -23,13 +23,12 @@ np.seterr(divide='ignore',invalid='ignore')
 
 # %%
 if __name__ == '__main__':
-    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
-        '510214538','524691284','527048992','531006860','539670003']
+    list_Exp_ID = ['Video_'+str(x) for x in list(range(0,10))]
     Table_time = np.zeros((len(list_Exp_ID)))
     video_type = sys.argv[1] # 'SNR' # 'Raw' # 
+    # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
+    dir_video = '..\\..\\data\\NAOMi\\'
 
-    # dir_video = 'D:\\ABO\\20 percent 200' 
-    dir_video = '..\\data\\ABO\\'
     if video_type == 'SNR':
         varname = 'network_input' # 
         dir_video_SNR = os.path.join(dir_video, 'SNR video')

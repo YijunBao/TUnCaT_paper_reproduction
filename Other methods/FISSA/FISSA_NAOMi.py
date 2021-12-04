@@ -23,7 +23,7 @@ if __name__ == '__main__':
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
 
     # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
-    dir_video = '..\\data\\NAOMi\\'
+    dir_video = '..\\..\\data\\NAOMi\\'
     if video_type == 'SNR':
         dir_video_SNR = os.path.join(dir_video, 'SNR video')
     else:

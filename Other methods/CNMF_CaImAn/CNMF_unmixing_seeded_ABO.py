@@ -81,11 +81,10 @@ import cv2
 if __name__ == "__main__":
     start = time.time()
     #%% GT 
-    # dir_video = 'E:\\OnePhoton videos\\cropped videos\\'
-    dir_video = '..\\data\\1p\\'
-    list_Exp_ID = ['c25_59_228','c27_12_326','c28_83_210',
-                'c25_163_267','c27_114_176','c28_161_149',
-                'c25_123_348','c27_122_121','c28_163_244']
+    # dir_video = 'D:\\ABO\\20 percent 200\\'
+    dir_video = '..\\..\\data\\ABO\\'
+    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
+        '510214538','524691284','527048992','531006860','539670003']
     Table_time = np.zeros(len(list_Exp_ID))
     p = 1
 
@@ -102,7 +101,7 @@ if __name__ == "__main__":
         os.makedirs(dir_traces) 
 
     GTMask = {}
-    for (cnt, Exp_ID) in enumerate(list_Exp_ID):
+    for Exp_ID in list_Exp_ID:
         filename_masks = os.path.join(dir_masks, 'FinalMasks_' + Exp_ID + '.mat')
         try:
             file_masks = loadmat(filename_masks)
@@ -113,7 +112,7 @@ if __name__ == "__main__":
             file_masks.close()
         GTMask[Exp_ID] = Masks  
 
-    Names_raw = glob.glob(dir_video_SNR+'*_memmap__*.mmap')
+    Names_raw = glob.glob(dir_video_SNR+'\\*_memmap__*.mmap')
 
 
     for (cnt, Exp_ID) in enumerate(list_Exp_ID):
@@ -223,19 +222,11 @@ if __name__ == "__main__":
             print_assignment=False, plot_results=False, Cn=Cn, labels=['GT', 'Offline'])
         # cnt +=1 
         #%
-        if idx_size_neuro.size and tp_comp.size:  
-            idx_components_gt = idx_size_neuro[tp_comp]
-        else:
-            idx_components_gt = idx_size_neuro
-        if idx_size_neuro.size and fp_comp.size:  
-            idx_components_bad_gt = idx_size_neuro[fp_comp]
-        else:
-            idx_components_bad_gt = idx_size_neuro
         savemat(os.path.join(dir_traces, Exp_ID + '.mat'), {'Cn':Cn,
             'tp_gt':tp_gt, 'tp_comp':tp_comp, 'fn_gt':fn_gt, 'fp_comp':fp_comp, 'performance_cons_off':performance_cons_off, 
             'idx_size_neuro_gt':idx_size_neuro, 'A_thr':A_thr,
-            'A_gt':A, 'C_gt':C, 'b_gt':b, 'f_gt':f, 'YrA_gt':YrA, 'd1':d1, 'd2':d2, 'idx_components_gt':idx_components_gt,
-            'idx_components_bad_gt':idx_components_bad_gt, 'fname_new':fname_new}, do_compression=True)
+            'A_gt':A, 'C_gt':C, 'b_gt':b, 'f_gt':f, 'YrA_gt':YrA, 'd1':d1, 'd2':d2, 'idx_components_gt':idx_size_neuro[tp_comp],
+            'idx_components_bad_gt':idx_size_neuro[fp_comp], 'fname_new':fname_new}, do_compression=True)
         #%
         # np.savez(os.path.join(dirSave, os.path.split(fname_new)[1][:-4] + 'match_masks.npz'), Cn=Cn,
         #     tp_gt=tp_gt, tp_comp=tp_comp, fn_gt=fn_gt, fp_comp=fp_comp, performance_cons_off=performance_cons_off, idx_size_neuro_gt=idx_size_neuro, A_thr=A_thr,

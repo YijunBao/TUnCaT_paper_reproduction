@@ -78,7 +78,7 @@ for tid = 1:length(list_spike_type)
         dir_FISSA = fullfile(dir_traces,folder);
         useTF = strcmp(video, 'Raw');
         folder_SUNS = 'SUNS_complete Masks';
-        dir_SUNS = fullfile(dir_traces,folder_SUNS);
+        dir_SUNS = fullfile(dir_video,folder_SUNS);
         folder_caiman = sprintf('caiman-Batch_%s\\275',video);
         dir_caiman = fullfile(dir_traces,folder_caiman);
 

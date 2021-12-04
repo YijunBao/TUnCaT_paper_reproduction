@@ -78,7 +78,7 @@ for tid = 1:length(list_spike_type)
         dir_FISSA = fullfile(dir_traces,folder);
         useTF = strcmp(video, 'Raw');
         folder_SUNS = 'SUNS_complete Masks';
-        dir_SUNS = fullfile(dir_traces,folder_SUNS);
+        dir_SUNS = fullfile(dir_video,folder_SUNS);
 
         [list_recall,list_precision,list_F1]=deal(zeros(num_Exp, num_ratio));
 

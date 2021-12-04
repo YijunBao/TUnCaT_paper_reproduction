@@ -13,7 +13,7 @@ from use_nmfunmix_mp_diag_v1_shm_MSE_novideo import use_nmfunmix
 
 
 if __name__ == '__main__':
-    # sys.argv = ['py', 'downsample', 'Raw', '1', '1', '0', '0']
+    # sys.argv = ['py', 'Raw', '1', '0', '1', '1']
     list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
         '510214538','524691284','527048992','531006860','539670003']
     video_type = sys.argv[1] # 'Raw' # 'SNR' # 
@@ -21,6 +21,7 @@ if __name__ == '__main__':
     dir_video = '..\\data\\ABO\\'
 
     Qclip = 0
+    epsilon = 0
     nbin = int(sys.argv[2]) # 1 # 
     bin_option = 'downsample' # 'mean' # 'sum' # 
     if nbin == 1:
@@ -28,12 +29,17 @@ if __name__ == '__main__':
     else:
         addon = '_'+bin_option +str(nbin)
 
-    th_pertmin = 1
-    epsilon = 0
-    use_direction = False
-    flexible_alpha = bool(int(sys.argv[3])) # True
+    th_pertmin = float(sys.argv[4]) # 1 #
+    if th_pertmin < 1:
+        addon += '_th_pertmin={}'.format(sys.argv[4])
+    
+    th_residual = float(sys.argv[3]) # 0
+    if th_residual > 0:
+        addon += '_residual0={}'.format(sys.argv[3])
+
+    flexible_alpha = bool(int(sys.argv[5])) # True # 
     if flexible_alpha:
-        addon += ''
+        # addon += ''
         list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30]
         # addon += '_1000'
         # list_alpha = [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10, 20, 30, 50, 100, 200, 300, 500, 1000]
@@ -119,7 +125,7 @@ if __name__ == '__main__':
             start = time.time()
             traces_nmfdemix, list_mixout, list_MSE, list_final_alpha, list_n_iter = use_nmfunmix(
                 traces, bgtraces, outtraces, list_neighbors, [alpha], Qclip, \
-                th_pertmin, epsilon, use_direction, nbin, bin_option, flexible_alpha)
+                th_pertmin, epsilon, th_residual, nbin, bin_option, flexible_alpha)
             finish = time.time()
             print('unmixing time: {} s'.format(finish - start))
             Table_time[ind_Exp, ind_alpha] = finish-start

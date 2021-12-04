@@ -96,18 +96,18 @@ Poisson_filt = Poisson_filt/sum(Poisson_filt);
 kernel=fliplr(Poisson_filt);
 
 % lag = ceil(fs*rise) + ceil(fs*rise*3); % 3;
-cons = ceil(fs*decay*0.1);
-load([dir_video,'\GT Masks\Traces_etc_',list_Exp_ID{1},'.mat'],'clean_traces')
-folder = sprintf('traces_%s_%s_%s%d%s%s%s%s',method,'SNR',list_bin_option{1},list_nbin(1),list_part1{1},list_part2{1},list_part3{1},addon);
-dir_FISSA = fullfile(dir_traces,folder);
-load(fullfile(dir_FISSA,'raw',[list_Exp_ID{1},'.mat']),'traces');
-length_kernel_py = size(clean_traces,2) - size(traces,1)+1;
-length_diff = length_kernel_py - length(kernel);
-if length_diff > 0
-    kernel = padarray(kernel,[0,length_diff],'replicate','pre');
-elseif length_diff < 0
-    kernel = kernel(1-length_diff:end);
-end
+% cons = ceil(fs*decay*0.1);
+% load([dir_video,'\GT Masks\Traces_etc_',list_Exp_ID{1},'.mat'],'clean_traces')
+% folder = sprintf('traces_%s_%s_%s%d%s%s%s%s',method,'SNR',list_bin_option{1},list_nbin(1),list_part1{1},list_part2{1},list_part3{1},addon);
+% dir_FISSA = fullfile(dir_traces,folder);
+% load(fullfile(dir_FISSA,'raw',[list_Exp_ID{1},'.mat']),'traces');
+% length_kernel_py = size(clean_traces,2) - size(traces,1)+1;
+% length_diff = length_kernel_py - length(kernel);
+% if length_diff > 0
+%     kernel = padarray(kernel,[0,length_diff],'replicate','pre');
+% elseif length_diff < 0
+%     kernel = kernel(1-length_diff:end);
+% end
             
 
 %%

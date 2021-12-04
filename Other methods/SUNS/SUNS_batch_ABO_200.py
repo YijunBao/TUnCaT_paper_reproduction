@@ -8,7 +8,8 @@ import sys
 from scipy.io import savemat, loadmat
 import multiprocessing as mp
 
-sys.path.insert(1, '..\\..') # the path containing "suns" folder
+# sys.path.insert(1, '..\\..') # the path containing "suns" folder
+sys.path.insert(1, 'C:\\Users\\Yijun\\Documents\\GitHub\\Shallow-UNet-Neuron-Segmentation_SUNS') # the path containing "suns" folder
 os.environ['KERAS_BACKEND'] = 'tensorflow'
 # os.environ['CUDA_VISIBLE_DEVICES'] = '1' # Set which GPU to use. '-1' uses only CPU.
 
@@ -36,12 +37,13 @@ if __name__ == '__main__':
     list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
         '510214538','524691284','527048992','531006860','539670003']
     # folder of the raw videos
-    dir_video = 'D:\\ABO\\20 percent 200\\' 
+    dir_video = '..\\..\\data\\ABO\\'
+    # dir_video = 'D:\\ABO\\20 percent 200\\' 
     dir_video_train = 'D:\\ABO\\20 percent\\' 
     # folder of the ".mat" files stroing the GT masks in sparse 2D matrices
     dir_GTMasks = dir_video + 'GT Masks\\FinalMasks_' 
 
-    dir_parent = dir_video + 'complete\\' # folder to save all the processed data
+    dir_parent = dir_video + 'SUNS_complete\\' # folder to save all the processed data
     dir_parent_train = dir_video_train + 'complete\\' # folder to save all the processed data
     dir_output = dir_parent + 'output_masks\\' # folder to save the segmented masks and the performance scores
     dir_params = dir_parent_train + 'output_masks\\' # folder of the optimized hyper-parameters

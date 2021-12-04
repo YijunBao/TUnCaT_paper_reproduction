@@ -81,9 +81,10 @@ import cv2
 if __name__ == "__main__":
     start = time.time()
     #%% GT 
-    # dir_video = 'F:\\NAOMi\\120s_30Hz_N=200_100mW_noise10+23_NA0.8,0.6_GCaMP6f\\'
-    dir_video = '..\\data\\NAOMi\\'
-    list_Exp_ID = ['Video_'+str(n) for n in range(10)]
+    # dir_video = 'D:\\ABO\\20 percent 200\\'
+    dir_video = '..\\..\\data\\ABO\\'
+    list_Exp_ID = ['501484643','501574836','501729039','502608215','503109347',
+        '510214538','524691284','527048992','531006860','539670003']
     Table_time = np.zeros(len(list_Exp_ID))
     p = 1
 
@@ -94,8 +95,8 @@ if __name__ == "__main__":
     else:
         varname = 'mov' # 
         dir_video_SNR = dir_video
-    dir_masks = os.path.join(dir_video, 'GT Masks')
-    dir_traces = os.path.join(dir_video, 'traces_CNMF_'+video_type+'_p'+str(p))
+    dir_masks = os.path.join(dir_video, 'SUNS_complete Masks')
+    dir_traces = os.path.join(dir_video, 'traces_SUNS_complete+CNMF_'+video_type+'_p'+str(p))
     if not os.path.exists(dir_traces):
         os.makedirs(dir_traces) 
 
@@ -109,6 +110,11 @@ if __name__ == "__main__":
             file_masks = h5py.File(filename_masks, 'r')
             Masks = np.array(file_masks['FinalMasks']).astype('bool')
             file_masks.close()
+            # if video_type == 'SNR':
+            #     (ncells, Lxm, Lym) = Masks.shape
+            #     dLx = (8-Lxm%8)%8 # int(np.ceil(Lxm/8)*8)
+            #     dLy = (8-Lym%8)%8 # int(np.ceil(Lym/8)*8)
+            #     Masks = np.pad(Masks,((0,0),(0,dLx),(0,dLy)),'constant', constant_values=0)
         GTMask[Exp_ID] = Masks  
 
     Names_raw = glob.glob(dir_video_SNR+'\\*_memmap__*.mmap')
@@ -221,19 +227,11 @@ if __name__ == "__main__":
             print_assignment=False, plot_results=False, Cn=Cn, labels=['GT', 'Offline'])
         # cnt +=1 
         #%
-        if idx_size_neuro.size and tp_comp.size:  
-            idx_components_gt = idx_size_neuro[tp_comp]
-        else:
-            idx_components_gt = idx_size_neuro
-        if idx_size_neuro.size and fp_comp.size:  
-            idx_components_bad_gt = idx_size_neuro[fp_comp]
-        else:
-            idx_components_bad_gt = idx_size_neuro
         savemat(os.path.join(dir_traces, Exp_ID + '.mat'), {'Cn':Cn,
             'tp_gt':tp_gt, 'tp_comp':tp_comp, 'fn_gt':fn_gt, 'fp_comp':fp_comp, 'performance_cons_off':performance_cons_off, 
             'idx_size_neuro_gt':idx_size_neuro, 'A_thr':A_thr,
-            'A_gt':A, 'C_gt':C, 'b_gt':b, 'f_gt':f, 'YrA_gt':YrA, 'd1':d1, 'd2':d2, 'idx_components_gt':idx_components_gt,
-            'idx_components_bad_gt':idx_components_bad_gt, 'fname_new':fname_new}, do_compression=True)
+            'A_gt':A, 'C_gt':C, 'b_gt':b, 'f_gt':f, 'YrA_gt':YrA, 'd1':d1, 'd2':d2, 'idx_components_gt':idx_size_neuro[tp_comp],
+            'idx_components_bad_gt':idx_size_neuro[fp_comp], 'fname_new':fname_new}, do_compression=True)
         #%
         # np.savez(os.path.join(dirSave, os.path.split(fname_new)[1][:-4] + 'match_masks.npz'), Cn=Cn,
         #     tp_gt=tp_gt, tp_comp=tp_comp, fn_gt=fn_gt, fp_comp=fp_comp, performance_cons_off=performance_cons_off, idx_size_neuro_gt=idx_size_neuro, A_thr=A_thr,

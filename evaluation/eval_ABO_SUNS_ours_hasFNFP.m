@@ -80,7 +80,7 @@ for tid = 1:length(list_spike_type)
             folder = sprintf('traces_%s_%s%s%s%s%s',method,video,part1,part2,part3,addon);
             dir_FISSA = fullfile(dir_traces,folder);
             folder_SUNS = 'SUNS_complete Masks';
-            dir_SUNS = fullfile(dir_traces,folder_SUNS);
+            dir_SUNS = fullfile(dir_video,folder_SUNS);
             useTF = strcmp(video, 'Raw');
 
 %             list_alpha = [0.1, 0.2, 0.3, 0.5, 1]; %

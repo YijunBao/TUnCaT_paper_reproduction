@@ -69,6 +69,9 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], th_pertmin=1, epsilon=0, \
     # Gradually increase alpha until the output mixout is singular,
     # then choose the maximum alpha that provides nonsingular mixout
     for j in range(len(list_alpha)):
+        if j>0:
+            (traceout_temp, mixout_temp, tempmixIDs_temp, subtraces_temp, MSE_temp, n_iter_temp) \
+                = (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter)
         (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter) = nmfunmix(tracein, \
             nbin=nbin, alpha=list_alpha[j], epsilon=epsilon, bin_option=bin_option) 
         alpha_final = list_alpha[j]
@@ -76,15 +79,11 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], th_pertmin=1, epsilon=0, \
         
         # question_flag == True means the alpha is too large. 
         if question_flag:
-            jj = j*1
-            if jj > 0: # If the alpha is too large only at some late alpha, then return to the privous alpha
-                while jj > 0 and question_flag:
-                    jj = jj-1
-                    (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter) = nmfunmix(tracein, \
-                        nbin=nbin, alpha=list_alpha[jj], epsilon=epsilon, bin_option=bin_option) 
-                    alpha_final = list_alpha[jj]
-                    question_flag = over_regularization(traceout, eps, subtraces, th_pertmin, th_residual, MSE, noise) 
-            if jj == 0 and flexible_alpha:  
+            if j > 0: # If the alpha is too large only at some late alpha, then return to the privous alpha
+                alpha_final = list_alpha[j-1]
+                (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter) \
+                    = (traceout_temp, mixout_temp, tempmixIDs_temp, subtraces_temp, MSE_temp, n_iter_temp)
+            if flexible_alpha and j == 0:  
                 # if the first alpha already caused over-regularization, and flexible alpha strategy is used,
                 # then recursively divide alpha by 2 until no over-regularization exists.
                 alpha_temp = list_alpha[0]
@@ -95,6 +94,22 @@ def nmfunmix1(i, trace, outtrace, list_alpha=[0], th_pertmin=1, epsilon=0, \
                     alpha_final = alpha_temp
                     question_flag = over_regularization(traceout, eps, subtraces, th_pertmin, th_residual, MSE, noise)
             break
+
+        elif flexible_alpha and (j == len(list_alpha)-1):
+            # if the last alpha still did not cause over-regularization, and flexible alpha strategy is used,
+            # then recursively multiply alpha by 2 until over-regularization occurs.
+            alpha_temp = alpha_final
+            while not question_flag: # 
+                alpha_final = alpha_temp
+                (traceout_temp, mixout_temp, tempmixIDs_temp, subtraces_temp, MSE_temp, n_iter_temp) \
+                    = (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter)
+                alpha_temp = alpha_temp*2
+                (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter) = nmfunmix(tracein, \
+                    nbin=nbin, alpha=alpha_temp, epsilon=epsilon, bin_option=bin_option) 
+                question_flag = over_regularization(traceout, eps, subtraces, th_pertmin, th_residual, MSE, noise)
+            break
+            (traceout, mixout, tempmixIDs, subtraces, MSE, n_iter) \
+                = (traceout_temp, mixout_temp, tempmixIDs_temp, subtraces_temp, MSE_temp, n_iter_temp)
 
     print('finished neuron', i)
     return traceout, mixout, outtrace, tempmixIDs, subtraces, alpha_final, MSE, tracein, n_iter
