@@ -1,7 +1,8 @@
 import numpy as np
 from nmfunmix_MSE import nmfunmix
 
-
+# Can substitute for "nmfunmix1_diag1_v1_shm_pertmin_MSE_novideo.py", 
+# and constrain alpha in two directions, so that alpha is the maximum value that avoids over-regularization
 def nmfunmix1(i, trace, outtrace, list_alpha=[0], th_pertmin=1, epsilon=0, \
         th_residual=0, nbin=1, bin_option='downsample', flexible_alpha=True):
     ''' Unmix the input traces in "trace" and "outtrace" using NMF, and obtain the unmixed traces and the mixing matrix. 

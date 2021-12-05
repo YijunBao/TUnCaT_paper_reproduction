@@ -9,7 +9,8 @@ from sklearn.metrics import mean_squared_error
 
 from bin_trace_video import bin_trace
 
-
+# Can substitute for "nmfunmix_MSE.py", 
+# and do not use residual trace to replace zero trace. 
 def nmfunmix(Ftmix, nbin=1, tol=1e-4, max_iter=20000, alpha=1, l1_ratio=0.5, epsilon=0, bin_option='downsample'):
     ''' Unmix the input traces in Ftmix using NMF, and obtain the unmixed traces and the mixing matrix. 
     Inputs: 
