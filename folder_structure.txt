@@ -34,6 +34,7 @@
 |       JaccardDist_2.m                                
 |       GetPerformance_Jaccard.m
 |       noise_PSD.m                                    
+|       eval_CaImAn_spatial.m                                           # Convert spatial masks of CaImAn to binary masks
 |       ProcessOnACIDMasks.m
 |       summary_all.m                                                   # Run all the summary_{} code
 |       summary_F1_timing_all_data.m                                    # Summarize the F1 scores and processing time of all unmixing methods processing all datasets (Fig. 2-5)

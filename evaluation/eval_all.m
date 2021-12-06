@@ -18,6 +18,7 @@ eval_ABO_ours
 % eval_ABO_ours_bin
 eval_ABO_ours_fixed_alpha
 
+eval_CaImAn_spatial
 eval_ABO_SUNS_ours_hasFNFP
 eval_ABO_SUNS_CNMF_hasFNFP
 eval_ABO_caiman_hasFNFP
