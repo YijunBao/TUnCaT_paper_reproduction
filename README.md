@@ -7,6 +7,8 @@ Copyright (C) 2021 Duke University NeuroToolbox.
 
 Detailed folder structure of this repository is shown in `folder_structure.txt`. We give a general introduction of the files of this repository below. All the data to reproduce the main figures, including the videos, masks, manual labels, unmixed traces, processing time, and F1 scores are provided. Videos and unmixed traces to reproduce the supplementary figures are not provided because they are too large, but the processing time and F1 scores to reproduce the supplementary figures are provided. Most of the code used in this paper is provided, except the implementation of NAOMi. If you want to get the data or code not shared in this repository, please email us. 
 
+For interest of space, we do not include the videos and unmixed traces directly in this repo. Instead, we uploaded them to [FigShare](https://figshare.com/articles/dataset/TUnCaT_paper_reproduction/17132069). 
+
 
 # Videos and GT labels
 In our paper, we used experimental two-photon imaging videos from Allen Brain Observatory (ABO) dataset, simulated two-photon imaging videos using NAOMi, and experimental one-photon imaging videos from our lab. We used the manually labeled GT masks and GT transients for experimental videos, and used the automatically generated GT masks and GT transients for simulated videos. A more detailed instruction is given below.
