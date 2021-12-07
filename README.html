@@ -37,7 +37,7 @@
     <body class="vscode-body vscode-light">
         <p><img src="file:///c:\Users\baoyi\Documents\GitHub\TUnCaT_paper_reproduction\readme\neurotoolbox-logo.svg" alt="NeuroToolbox logo"></p>
 <h1 id="tuncat_paper_reproduction">TUnCaT_paper_reproduction</h1>
-<p>Data and reproduction code for the TUnCaT paper.</p>
+<p>Data and reproduction code for the TUnCaT paper (Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)).).</p>
 <p>Copyright (C) 2021 Duke University NeuroToolbox.</p>
 <p>Detailed folder structure of this repository is shown in <code>folder_structure.txt</code>. We give a general introduction of the files of this repository below. All the data to reproduce the main figures, including the videos, masks, manual labels, unmixed traces, processing time, and F1 scores are provided. Videos and unmixed traces to reproduce the supplementary figures are not provided because they are too large, but the processing time and F1 scores to reproduce the supplementary figures are provided. Most of the code used in this paper is provided, except the implementation of NAOMi. If you want to get the data or code not shared in this repository, please email us.</p>
 <h1 id="videos-and-gt-labels">Videos and GT labels</h1>
@@ -75,7 +75,7 @@ However, <code>eval_{data}_ours_bin.m</code> can only process the users-generate
 <h1 id="plot-figures-in-the-paper">Plot figures in the paper</h1>
 <p>The code used to plot the main figures and supplementary figures in the paper is provided in <code>plot figures</code>. Users can run <code>plot_figures_all.m</code> to run all the cdoe together. By default, the code will use the unmixed traces and performance measurement provided in <code>results/{data}</code>, but users can change the folders to use the unmixed traces they generated in <code>data/{data}</code> and use the performance measurement they generated in <code>evaluation/{data}</code>. However, Figs S4, S6 and S7 cannot be regenerated from the raw videos, because we did not provide the large raw videos.</p>
 <h1 id="licensing-and-copyright">Licensing and Copyright</h1>
-<p>TUnCaT is currently private, but it will be released under <a href="LICENSE">the GNU License, Version 2.0</a> after paper acceptance.</p>
+<p>TUnCaT is released under <a href="LICENSE">the GNU License, Version 2.0</a>.</p>
 <h1 id="sponsors">Sponsors</h1>
 <p><img src="file:///c:\Users\baoyi\Documents\GitHub\TUnCaT_paper_reproduction\readme\NSFBRAIN.png" height="100"/><img src="file:///c:\Users\baoyi\Documents\GitHub\TUnCaT_paper_reproduction\readme\BRF.png" height="100"/><img src="file:///c:\Users\baoyi\Documents\GitHub\TUnCaT_paper_reproduction\readme\Beckmanlogo.png" height="100"/>
 <br>

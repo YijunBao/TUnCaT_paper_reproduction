@@ -1,7 +1,7 @@
 ![NeuroToolbox logo](readme/neurotoolbox-logo.svg)
 
 # TUnCaT_paper_reproduction
-Data and reproduction code for the TUnCaT paper.
+Data and reproduction code for the TUnCaT paper (Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)).).
 
 Copyright (C) 2021 Duke University NeuroToolbox.
 
@@ -71,7 +71,7 @@ The code used to plot the main figures and supplementary figures in the paper is
 
 
 # Licensing and Copyright
-TUnCaT is currently private, but it will be released under [the GNU License, Version 2.0](LICENSE) after paper acceptance.
+TUnCaT is released under [the GNU License, Version 2.0](LICENSE).
 
 
 # Sponsors

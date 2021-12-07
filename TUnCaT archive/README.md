@@ -5,7 +5,7 @@ Temporal Unmixing of Calcium Traces (TUnCaT) is an automatic algorithm to decont
 
 Copyright (C) 2021 Duke University NeuroToolbox
 
-This repo is an archived version of TUnCaT (v1.0). It also contains the results for our paper and the code to generate those results. This repo will not be updated. Please visit the [newer version](https://github.com/YijunBao/TUnCaT) if you are not interested in reproducing our paper results. 
+This repo is an archived version of TUnCaT (v1.0). It also contains the results for our paper and the code to generate those results. This repo will not be updated. Please visit the [latest version](https://github.com/YijunBao/TUnCaT) if you are not interested in reproducing our paper results. 
 
 - [TUnCaT](#tuncat)
 - [Installation on Windows or Linux](#installation-on-windows-or-linux)
@@ -116,7 +116,8 @@ However, if the experimental conditions are very different from our test dataset
 
 
 # Citation 
-If you use any part of this software in your work, please cite Bao et al. 2021.
+If you use any part of this software in your work, please cite:
+Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)).
 
 
 # Licensing and Copyright

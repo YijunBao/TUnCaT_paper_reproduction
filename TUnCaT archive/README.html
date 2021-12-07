@@ -39,7 +39,7 @@
 <h1 id="tuncat">TUnCaT</h1>
 <p>Temporal Unmixing of Calcium Traces (TUnCaT) is an automatic algorithm to decontaminate false transients from temporal traces generated from fluorescent calcium imaging videos. TUnCaT removed false transients caused by large-scale background fluctuation using background subtraction; TUnCaT removed false transients caused by neighboring neurons, axons, and dendrites using nonnegative matrix factorization (NMF).</p>
 <p>Copyright (C) 2021 Duke University NeuroToolbox</p>
-<p>This repo is an archived version of TUnCaT (v0.2). It also contains the results for our paper and the code to generate those results. This repo will not be updated. Please visit the <a href="https://github.com/YijunBao/TUnCaT">newer version</a> if you are not interested in reproducing our paper results.</p>
+<p>This repo is an archived version of TUnCaT (v1.0). It also contains the results for our paper and the code to generate those results. This repo will not be updated. Please visit the <a href="https://github.com/YijunBao/TUnCaT">latest version</a> if you are not interested in reproducing our paper results.</p>
 <ul>
 <li><a href="#tuncat">TUnCaT</a></li>
 <li><a href="#installation-on-windows-or-linux">Installation on Windows or Linux</a>
@@ -156,7 +156,8 @@ python demo_TUnCaT.py
 <p>However, if the experimental conditions are very different from our test datasets, using cross-validation to optimize alpha will potentially be more reliable. Because cross-validation requires multiple videos, we don't provide demo for cross-validation, but users can run through our paper reproduction code in other folders to see how cross-validation can be done. Here, we will briefly introduce how to perform cross-validation, and use our ABO dataset as an example.</p>
 <p>(1) Find a dataset containing multiple videos with similar experimental conditions. The three major datasets in our paper, ABO, NAOMi, 1p, are all qualified. (2) Manually label ground truth transients using the MATLAB GUI in the folder <code>../TemporalLabelingGUI</code> (We already provided the ground truth transients for our datasets). (3) Run TUnCaT with multiple alpha in <code>list_alpha</code> using <code>TUnCaT_multi_ABO.py</code>. For a new dataset, you can also start with <code>demo_TUnCaT.py</code>, and set <code>list_alpha</code> to [0.1, 0.2, 0.3, 0.5, 1, 2, 3, 5, 10]. Make sure <code>multi_alpha = True</code>. (4) Calculate the F1 scores of all videos with different alpha using <code>../evaluation/eval_ABO_ours.m</code>. (5) Find the optimal alpha for each cross-validation round using <code>../evaluation/cross_validation.m</code>. You can load the file storing the calculated F1 scores, or run <code>cross_validation.m</code> immediately after <code>eval_ABO_ours.m</code> to avoid reloading the F1 scores.</p>
 <h1 id="citation">Citation</h1>
-<p>If you use any part of this software in your work, please cite Bao et al. 2021.</p>
+<p>If you use any part of this software in your work, please cite:
+Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)).</p>
 <h1 id="licensing-and-copyright">Licensing and Copyright</h1>
 <p>TUnCaT is released under <a href="LICENSE">the GNU License, Version 2.0</a>.</p>
 <h1 id="sponsors">Sponsors</h1>
