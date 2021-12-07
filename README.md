@@ -3,7 +3,7 @@
 [![DOI](https://img.shields.io/badge/doi-10.6084%2Fm9.figshare.17132069.v1-blue)](https://doi.org/10.6084/m9.figshare.17132069.v1)
 
 # TUnCaT_paper_reproduction
-Data and reproduction code for the TUnCaT paper (Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)).).
+Data and reproduction code for the TUnCaT paper (Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)). doi: 10.3389/fnins.2021.797421.).
 
 Copyright (C) 2021 Duke University NeuroToolbox.
 
