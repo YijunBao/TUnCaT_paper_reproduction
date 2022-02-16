@@ -1,11 +1,15 @@
 ![NeuroToolbox logo](readme/neurotoolbox-logo.svg)
 
+[![DOI](https://img.shields.io/badge/doi-10.6084%2Fm9.figshare.17132069.v1-blue)](https://doi.org/10.6084/m9.figshare.17132069.v1)
+
 # TUnCaT_paper_reproduction
-Data and reproduction code for the TUnCaT paper (Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)).).
+Data and reproduction code for the TUnCaT paper (Bao, Y., E. Redington, A. Agarwal, and Y. Gong, Decontaminate traces from fluorescence calcium imaging videos using targeted nonnegative matrix factorization. Frontiers in Neuroscience (2021 (in press)). doi: 10.3389/fnins.2021.797421.).
 
 Copyright (C) 2021 Duke University NeuroToolbox.
 
 Detailed folder structure of this repository is shown in `folder_structure.txt`. We give a general introduction of the files of this repository below. All the data to reproduce the main figures, including the videos, masks, manual labels, unmixed traces, processing time, and F1 scores are provided. Videos and unmixed traces to reproduce the supplementary figures are not provided because they are too large, but the processing time and F1 scores to reproduce the supplementary figures are provided. Most of the code used in this paper is provided, except the implementation of NAOMi. If you want to get the data or code not shared in this repository, please email us. 
+
+For interest of space, we do not include the videos and unmixed traces directly in this repo. Instead, we uploaded them to [figshare](https://figshare.com/articles/dataset/TUnCaT_paper_reproduction/17132069). 
 
 
 # Videos and GT labels
