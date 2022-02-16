@@ -133,7 +133,7 @@ function NeuronFilter(vid, Mask, markings, trace) % markings variable =  for ext
         vid = binVideo_temporal(vid, scale); % YB 2019/07/22
         Trace = double(binTraces_temporal(Trace, scale));
         if contains(video_class,'int')
-            eval('vid = ',video_class,'(vid);');
+            eval(['vid = ',video_class,'(vid);']);
         end
     end
  
